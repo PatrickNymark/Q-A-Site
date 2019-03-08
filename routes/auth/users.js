@@ -18,7 +18,7 @@ router.post('/register', (req, res) => {
   User.findOne({ email }).then(user => {
     // Check if user exists
     if (user) {
-      res.status(400).json({ msg: 'User already exists' });
+      return res.status(400).json({ msg: 'User already exists' });
     }
 
     // Generate salt
