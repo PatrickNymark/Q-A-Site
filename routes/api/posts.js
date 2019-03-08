@@ -93,4 +93,22 @@ router.delete(
   }
 );
 
+// POST => add like
+router.post(
+  '/like/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { id } = req.params;
+    Post.findById(id).then(post => {
+      if (!post) {
+        return res.status(400).json({ msg: 'Post not found' });
+      }
+
+      post.likes.unshift(req.user);
+
+      post.save().then(post => res.json(post));
+    });
+  }
+);
+
 module.exports = router;
