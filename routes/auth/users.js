@@ -1,18 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const keys = require('../../config/keys');
 
 // Load Model
 const User = require('../../models/User');
 
 router.get('/', (req, res) => {
-  res.json('test');
+  User.find().then(users => res.json(users));
 });
 
 router.post('/register', (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
   User.findOne({ email }).then(user => {
+    // Check if user exists
     if (user) {
       res.status(400).json({ msg: 'User already exists' });
     }
@@ -37,6 +40,41 @@ router.post('/register', (req, res) => {
       });
     });
   });
+});
+
+router.post('/login', (req, res) => {
+  const { email, password } = req.body;
+
+  User.findOne({ email })
+    .then(user => {
+      if (!user) {
+        return res.status(400).json({ msg: 'Email does not exist' });
+      }
+
+      bcrypt
+        .compare(password, user.password)
+        .then(isMatch => {
+          if (!isMatch) {
+            res.status(400).json({ msg: 'Password Incorrect' });
+          }
+
+          const payload = {
+            id: user._id,
+            name: user.firstName + ' ' + user.lastName
+          };
+
+          jwt.sign(
+            payload,
+            keys.secretOrKey,
+            { expiresIn: 3600 },
+            (err, token) => {
+              res.json({ success: true, token: 'bearer ' + token });
+            }
+          );
+        })
+        .catch(err => res.status(400).json(err));
+    })
+    .catch(err => res.status(400).json(err));
 });
 
 module.exports = router;

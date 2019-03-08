@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 // Initialize
 const app = express();
@@ -7,6 +8,10 @@ const app = express();
 // Routes
 const posts = require('./routes/api/posts');
 const users = require('./routes/auth/users');
+
+// Passport Config
+app.use(passport.initialize());
+require('./config/passport')(passport);
 
 // Database config
 const db = require('./config/keys').mongoURI;
