@@ -58,4 +58,39 @@ router.post(
   }
 );
 
+// POST => delete comment from post
+router.delete(
+  '/comment/:id/:comment_id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { id, comment_id } = req.params;
+    Post.findById(id)
+      .then(post => {
+        if (!post) {
+          return res.status(400).json({ msg: 'Post not found' });
+        }
+
+        // Check if comment exists
+        if (
+          post.comments.filter(comment => comment._id.toString() === comment_id)
+            .length === 0
+        ) {
+          return res.status(400).json({ msg: 'Comment not found' });
+        }
+
+        // Get index of comment to remove
+        const removeIndex = post.comments
+          .map(comment => comment._id.toString())
+          .indexOf(comment_id);
+
+        // Delete comment from original array
+        post.comments.splice(removeIndex, 1);
+
+        // Save updated post
+        post.save().then(post => res.json(post));
+      })
+      .catch(err => res.status(400).json(err));
+  }
+);
+
 module.exports = router;
