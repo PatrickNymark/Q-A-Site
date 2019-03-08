@@ -1,11 +1,13 @@
-const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
-const passport = require('passport');
 
 // Load Model
 const User = require('../../models/User');
+
+/*
+  __REGISTER USER
+*/
 
 exports.registerUser = (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -37,6 +39,10 @@ exports.registerUser = (req, res) => {
     });
   });
 };
+
+/*
+  __LOGIN USER
+*/
 
 exports.loginUser = (req, res) => {
   const { email, password } = req.body;
