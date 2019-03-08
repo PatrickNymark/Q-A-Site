@@ -1,6 +1,11 @@
 // Load model
 const Post = require('../../models/Post');
 
+/*
+  __COMMENTS CONTROLLER
+*/
+exports.comments = require('./comments');
+
 /* 
   __ADD NEW POST
 */
