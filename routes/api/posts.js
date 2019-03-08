@@ -56,32 +56,16 @@ router.delete(
 router.post(
   '/like/:post_id',
   passport.authenticate('jwt', { session: false }),
-  postController.likes.addLike
+  postController.likes.likePost
 );
 
-// POST => unlike post
+// @route   POST api/posts/unlike/:post_id
+// @desc    Unlike post route
+// @access  Private
 router.post(
   '/unlike/:post_id',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    const { post_id } = req.params;
-
-    Post.findById(post_id).then(post => {
-      if (!post) {
-        return res.status(400).json({ msg: 'Post not found' });
-      }
-
-      if (post.likes.filter(like => console.log(like + '////' + req.user)))
-        // Get index to remove
-        //const removeIndex = post.likes.map(item => item.user.toString()).indexOf(req.user.id);
-
-        // Remove like
-        post.likes.splice(removeIndex, 1);
-
-      // Save updated post
-      //post.save().then(post => res.json(post));
-    });
-  }
+  postController.likes.unlikePost
 );
 
 module.exports = router;
