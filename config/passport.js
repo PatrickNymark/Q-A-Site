@@ -11,8 +11,8 @@ const params = {
 
 module.exports = passport => {
   passport.use(
-    new JwtStrategy(params, (payload, done) => {
-      User.findOne({ email: payload.email })
+    new JwtStrategy(params, (jwt_payload, done) => {
+      User.findById(jwt_payload.id)
         .then(user => {
           if (user) {
             return done(null, user);
