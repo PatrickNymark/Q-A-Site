@@ -33,7 +33,7 @@ router.delete(
 );
 
 // @route   POST api/posts/comment/:post_id
-// @desc    Comment on post route
+// @desc    Add comment route
 // @access  Private
 router.post(
   '/comment/:post_id',
@@ -41,29 +41,22 @@ router.post(
   postController.comments.addComment
 );
 
-// POST => delete comment from post
+// @route   DELETE api/posts/comment/:post_id/:comment_id
+// @desc    Delete comment route
+// @access  Private
 router.delete(
   '/comment/:post_id/:comment_id',
   passport.authenticate('jwt', { session: false }),
   postController.comments.deleteComment
 );
 
-// POST => like post
+// @route   POST api/posts/like/:post_id
+// @desc    Like post route
+// @access  Private
 router.post(
   '/like/:post_id',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    const { post_id } = req.params;
-    Post.findById(post_id).then(post => {
-      if (!post) {
-        return res.status(400).json({ msg: 'Post not found' });
-      }
-
-      post.likes.unshift(req.user);
-
-      post.save().then(post => res.json(post));
-    });
-  }
+  postController.likes.addLike
 );
 
 // POST => unlike post

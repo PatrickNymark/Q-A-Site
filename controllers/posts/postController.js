@@ -2,11 +2,12 @@
 const Post = require('../../models/Post');
 
 /*
-  __COMMENTS CONTROLLER
+  __COMMENTS AND LIKES CONTROLLERS
 */
 exports.comments = require('./comments');
+exports.likes = require('./likes');
 
-/* 
+/*
   __ADD NEW POST
 */
 exports.addNewPost = (req, res) => {
