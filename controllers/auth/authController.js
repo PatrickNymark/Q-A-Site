@@ -8,7 +8,6 @@ const User = require('../../models/User');
 /*
   __REGISTER USER
 */
-
 exports.registerUser = (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
@@ -49,22 +48,27 @@ exports.loginUser = (req, res) => {
 
   User.findOne({ email })
     .then(user => {
+      // User not found
       if (!user) {
         return res.status(400).json({ msg: 'Email does not exist' });
       }
 
+      // Compare password with crypted
       bcrypt
         .compare(password, user.password)
         .then(isMatch => {
+          // Passwords dont match
           if (!isMatch) {
             res.status(400).json({ msg: 'Password Incorrect' });
           }
 
+          // Create jwt payload
           const payload = {
             id: user._id,
             name: user.firstName + ' ' + user.lastName
           };
 
+          // Sign jwt token
           jwt.sign(
             payload,
             keys.secretOrKey,

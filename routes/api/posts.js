@@ -5,82 +5,47 @@ const passport = require('passport');
 // Controllers
 const postController = require('../../controllers/posts/postController');
 
+// @route   GET api/posts/
+// @desc    Get all posts route
+// @access  Public
 router.get('/', (req, res) => {
   Post.find().then(posts => {
     res.json(posts);
   });
 });
 
-// POST => add new post
+// @route   POST api/posts/
+// @desc    Add new post route
+// @access  Private
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
   postController.addNewPost
 );
 
-// POST => add comment to post
+// @route   DELETE api/posts/:post_id
+// @desc    Delete post route
+// @access  Private
+router.delete(
+  '/:post_id',
+  passport.authenticate('jwt', { session: false }),
+  postController.deletePost
+);
+
+// @route   POST api/posts/comment/:post_id
+// @desc    Comment on post route
+// @access  Private
 router.post(
   '/comment/:post_id',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    const { post_id } = req.params;
-
-    Post.findById(post_id)
-      .then(post => {
-        if (!post) {
-          return res.status(400).json({ msg: 'Post not found' });
-        }
-
-        // New post payload
-        const newComment = {
-          text: req.body.text,
-          user: req.user
-        };
-
-        // Add to beginning of comments array
-        post.comments.unshift(newComment);
-
-        // Save updated post
-        post.save().then(post => res.json(post));
-      })
-      .catch(err => res.status(400).json(err));
-  }
+  postController.comments.addComment
 );
 
 // POST => delete comment from post
 router.delete(
   '/comment/:post_id/:comment_id',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    const { post_id, comment_id } = req.params;
-
-    Post.findById(post_id)
-      .then(post => {
-        if (!post) {
-          return res.status(400).json({ msg: 'Post not found' });
-        }
-
-        // Check if comment exists
-        if (
-          post.comments.filter(comment => comment._id.toString() === comment_id)
-            .length === 0
-        ) {
-          return res.status(400).json({ msg: 'Comment not found' });
-        }
-
-        // Get index of comment to remove
-        const removeIndex = post.comments
-          .map(comment => comment._id.toString())
-          .indexOf(comment_id);
-
-        // Delete comment from original array
-        post.comments.splice(removeIndex, 1);
-
-        // Save updated post
-        post.save().then(post => res.json(post));
-      })
-      .catch(err => res.status(400).json(err));
-  }
+  postController.comments.deleteComment
 );
 
 // POST => like post
