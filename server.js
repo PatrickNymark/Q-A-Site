@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const app = express();
 
 // Routes
-const posts = require('./routes/api/post');
+const posts = require('./routes/api/posts');
+const users = require('./routes/auth/users');
 
 // Database config
 const db = require('./config/keys').mongoURI;
@@ -20,6 +21,7 @@ app.use(express.json());
 
 // Router middleware
 app.use('/api/posts', posts);
+app.use('/api/auth', users);
 
 const port = 5000 || process.env.PORT;
 
