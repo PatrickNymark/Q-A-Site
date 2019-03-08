@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 
-// Load model
-const Post = require('../../models/Post');
+// Controllers
+const postController = require('../../controllers/posts/postController');
 
 router.get('/', (req, res) => {
   Post.find().then(posts => {
@@ -15,56 +15,46 @@ router.get('/', (req, res) => {
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    const { title, text } = req.body;
-
-    const newPost = new Post({
-      creator: req.user,
-      title,
-      text
-    });
-
-    newPost
-      .save()
-      .then(post => res.json(post))
-      .catch(err => res.status(200).json(err.message));
-  }
+  postController.addNewPost
 );
 
 // POST => add comment to post
 router.post(
-  '/comment/:id',
+  '/comment/:post_id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    const { id } = req.params;
+    const { post_id } = req.params;
 
-    Post.findById(id).then(post => {
-      if (!post) {
-        return res.status(400).json({ msg: 'Post not found' });
-      }
+    Post.findById(post_id)
+      .then(post => {
+        if (!post) {
+          return res.status(400).json({ msg: 'Post not found' });
+        }
 
-      // New post payload
-      const newComment = {
-        text: req.body.text,
-        user: req.user
-      };
+        // New post payload
+        const newComment = {
+          text: req.body.text,
+          user: req.user
+        };
 
-      // Add to beginning of comments array
-      post.comments.unshift(newComment);
+        // Add to beginning of comments array
+        post.comments.unshift(newComment);
 
-      // Save updated post
-      post.save().then(post => res.json(post));
-    });
+        // Save updated post
+        post.save().then(post => res.json(post));
+      })
+      .catch(err => res.status(400).json(err));
   }
 );
 
 // POST => delete comment from post
 router.delete(
-  '/comment/:id/:comment_id',
+  '/comment/:post_id/:comment_id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    const { id, comment_id } = req.params;
-    Post.findById(id)
+    const { post_id, comment_id } = req.params;
+
+    Post.findById(post_id)
       .then(post => {
         if (!post) {
           return res.status(400).json({ msg: 'Post not found' });
@@ -93,13 +83,13 @@ router.delete(
   }
 );
 
-// POST => add like
+// POST => like post
 router.post(
-  '/like/:id',
+  '/like/:post_id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    const { id } = req.params;
-    Post.findById(id).then(post => {
+    const { post_id } = req.params;
+    Post.findById(post_id).then(post => {
       if (!post) {
         return res.status(400).json({ msg: 'Post not found' });
       }
@@ -107,6 +97,31 @@ router.post(
       post.likes.unshift(req.user);
 
       post.save().then(post => res.json(post));
+    });
+  }
+);
+
+// POST => unlike post
+router.post(
+  '/unlike/:post_id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { post_id } = req.params;
+
+    Post.findById(post_id).then(post => {
+      if (!post) {
+        return res.status(400).json({ msg: 'Post not found' });
+      }
+
+      if (post.likes.filter(like => console.log(like + '////' + req.user)))
+        // Get index to remove
+        //const removeIndex = post.likes.map(item => item.user.toString()).indexOf(req.user.id);
+
+        // Remove like
+        post.likes.splice(removeIndex, 1);
+
+      // Save updated post
+      //post.save().then(post => res.json(post));
     });
   }
 );
