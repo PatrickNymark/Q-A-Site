@@ -7,6 +7,7 @@ const app = express();
 
 // Routes
 const posts = require('./routes/api/posts');
+const profiles = require('./routes/api/profile');
 const users = require('./routes/auth/users');
 
 // Passport Config
@@ -26,6 +27,7 @@ app.use(express.json());
 
 // Router middleware
 app.use('/api/posts', posts);
+app.use('/api/profiles', profiles);
 app.use('/api/auth', users);
 
 const port = 5000 || process.env.PORT;
