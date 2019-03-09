@@ -1,13 +1,26 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
 
-// Load Model
-const Profile = require('../../models/Profile');
+// Load controllers
+const profileController = require('../../controllers/profiles/profileController');
 
+// @route   GET api/profiles/
+// @desc    Get all profiles route
+// @access  Public
 router.get('/', (req, res) => {
   Profile.find().then(profiles => {
     res.json(profiles);
   });
 });
+
+// @route   POST api/posts/
+// @desc    Add or update profile route
+// @access  Private
+router.post(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  profileController.addOrUpdateProfile
+);
 
 module.exports = router;

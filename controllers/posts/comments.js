@@ -2,7 +2,9 @@
 const Post = require('../../models/Post');
 
 /*
+
   __ADD COMMENT
+
 */
 exports.addComment = (req, res) => {
   const { post_id } = req.params;
@@ -30,7 +32,9 @@ exports.addComment = (req, res) => {
 };
 
 /*
+
   __DELETE COMMENT
+  
 */
 exports.deleteComment = (req, res) => {
   const { post_id, comment_id } = req.params;

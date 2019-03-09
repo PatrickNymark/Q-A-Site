@@ -2,7 +2,9 @@
 const Post = require('../../models/Post');
 
 /* 
+
   __ADD LIKE 
+  
 */
 exports.likePost = (req, res) => {
   const { post_id } = req.params;
@@ -21,7 +23,9 @@ exports.likePost = (req, res) => {
 };
 
 /* 
+
   __REMOVE LIKE
+
 */
 exports.unlikePost = (req, res) => {
   const { post_id } = req.params;

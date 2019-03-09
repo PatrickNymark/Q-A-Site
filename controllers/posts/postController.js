@@ -2,13 +2,17 @@
 const Post = require('../../models/Post');
 
 /*
+
   __COMMENTS AND LIKES CONTROLLERS
+
 */
 exports.comments = require('./comments');
 exports.likes = require('./likes');
 
 /*
+
   __ADD NEW POST
+
 */
 exports.addNewPost = (req, res) => {
   const { title, text } = req.body;
@@ -28,7 +32,9 @@ exports.addNewPost = (req, res) => {
 };
 
 /*
+
   __DELETE POST
+  
 */
 exports.deletePost = (req, res) => {
   const { post_id } = req.params;

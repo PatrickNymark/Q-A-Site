@@ -6,7 +6,9 @@ const keys = require('../../config/keys');
 const User = require('../../models/User');
 
 /*
+
   __REGISTER USER
+
 */
 exports.registerUser = (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -40,9 +42,10 @@ exports.registerUser = (req, res) => {
 };
 
 /*
-  __LOGIN USER
-*/
 
+  __LOGIN USER
+
+*/
 exports.loginUser = (req, res) => {
   const { email, password } = req.body;
 
