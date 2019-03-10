@@ -33,8 +33,10 @@ exports.addOrUpdateProfile = (req, res) => {
 
   Profile.findOne({ user: req.user.id }).then(profile => {
     if (!profile) {
+      // Create and save new profile
       new Profile(profileFields).save().then(profile => res.json(profile));
     } else {
+      // Update profile
       Profile.findOneAndUpdate(
         { user: req.user.id },
         { $set: profileFields },
@@ -66,6 +68,36 @@ exports.addExperience = (req, res) => {
     profile.experiences.unshift(newExperience);
 
     // Save updated profile
+    profile.save().then(profile => res.json(profile));
+  });
+};
+
+/*  
+
+  __DELETE EXPERIENCE
+
+*/
+exports.deleteExperience = (req, res) => {
+  Profile.findOne({ user: req.user.id }).then(profile => {
+    //console.log(profile);
+
+    if (!profile) {
+      return res.status(400).json({ msg: 'Profile not found' });
+    }
+
+    const removeIndex = profile.experiences
+      .map(exp => exp.id.toString())
+      .indexOf(req.params.exp_id);
+
+    // Check if exp exists
+    if (removeIndex < 0) {
+      return res.status(400).json({ msg: 'Experience not found' });
+    }
+
+    // Remove experience
+    profile.experiences.splice(removeIndex, 1);
+
+    // save updated profile
     profile.save().then(profile => res.json(profile));
   });
 };
