@@ -43,3 +43,29 @@ exports.addOrUpdateProfile = (req, res) => {
     }
   });
 };
+
+/*
+
+  __ADD EXPERIENCE
+
+*/
+exports.addExperience = (req, res) => {
+  const { title, description, company, location, current } = req.body;
+
+  Profile.findOne({ user: req.user.id }).then(profile => {
+    // Create experience payload
+    const newExperience = {
+      title,
+      description,
+      company,
+      location,
+      current
+    };
+
+    // Add experience to beginning of array
+    profile.experiences.unshift(newExperience);
+
+    // Save updated profile
+    profile.save().then(profile => res.json(profile));
+  });
+};
