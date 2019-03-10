@@ -156,3 +156,29 @@ exports.deleteEducation = (req, res) => {
     profile.save().then(profile => res.json(profile));
   });
 };
+
+/*
+
+  __ADD SOCIAL
+
+*/
+exports.addOrUpdateSocial = (req, res) => {
+  const { facebook, instagram, linkedin, youtube } = req.body;
+
+  Profile.findOne({ user: req.user.id }).then(profile => {
+    if (!profile) {
+      return res.status(400).json({ msg: 'Profile not found' });
+    }
+
+    const payload = {
+      facebook,
+      instagram,
+      linkedin,
+      youtube
+    };
+
+    profile.social = payload;
+
+    profile.save().then(profile => res.json(profile));
+  });
+};

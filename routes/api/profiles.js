@@ -50,13 +50,22 @@ router.post(
   profileController.addEducation
 );
 
-// @route   POST api/profiles/education
-// @desc    Add education route
+// @route   DELETE api/profiles/education
+// @desc    Delete education route
 // @access  Private
 router.delete(
   '/education/:edu_id',
   passport.authenticate('jwt', { session: false }),
   profileController.deleteEducation
+);
+
+// @route   POST api/profiles/social
+// @desc    Add social route
+// @access  Private
+router.post(
+  '/social',
+  passport.authenticate('jwt', { session: false }),
+  profileController.addOrUpdateSocial
 );
 
 module.exports = router;
