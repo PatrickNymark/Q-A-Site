@@ -182,3 +182,26 @@ exports.addOrUpdateSocial = (req, res) => {
     profile.save().then(profile => res.json(profile));
   });
 };
+
+/* 
+
+  __ADD OR REMOVE FOLLOW
+
+*/
+exports.addOrRemoveFollow = (req, res) => {
+  const { user_id } = req.params;
+
+  Profile.findOne({ user: user_id }).then(profile => {
+    const index = profile.followers
+      .map(follower => follower.toString())
+      .indexOf(user_id);
+
+    if (index < 0) {
+      profile.followers.unshift(req.user);
+      return profile.save().then(profile => res.json(profile));
+    }
+
+    profile.followers.splice(index, 1);
+    profile.save().then(profile => res.json(profile));
+  });
+};

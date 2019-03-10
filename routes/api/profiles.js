@@ -68,4 +68,13 @@ router.post(
   profileController.addOrUpdateSocial
 );
 
+// @route   POST api/profiles/follow/:user_id
+// @desc    Add or remove follow route
+// @access  Private
+router.post(
+  '/follow/:user_id',
+  passport.authenticate('jwt', { session: false }),
+  profileController.addOrRemoveFollow
+);
+
 module.exports = router;
