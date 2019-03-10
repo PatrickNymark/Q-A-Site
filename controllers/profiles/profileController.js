@@ -101,3 +101,28 @@ exports.deleteExperience = (req, res) => {
     profile.save().then(profile => res.json(profile));
   });
 };
+
+/*
+
+  __ADD EDUCATION
+
+*/
+exports.addEducation = (req, res) => {
+  Profile.findOne({ user: req.user.id }).then(profile => {
+    if (!profile) {
+      return res.status(400).json({ msg: 'Profile not found' });
+    }
+
+    const newEducation = {
+      school: req.body.school,
+      degree: req.body.degree,
+      fieldofstudy: req.body.fieldofstudy,
+      description: req.body.description,
+      current: req.body.current
+    };
+
+    profile.education.unshift(newEducation);
+
+    profile.save().then(profile => res.json(profile));
+  });
+};

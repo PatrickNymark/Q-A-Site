@@ -32,13 +32,26 @@ router.post(
   profileController.addExperience
 );
 
-// @route   POST api/profiles/experience
-// @desc    Add experience route
+// @route   DELETE api/profiles/experience
+// @desc    Delete experience route
 // @access  Private
 router.delete(
   '/experience/:exp_id',
   passport.authenticate('jwt', { session: false }),
   profileController.deleteExperience
 );
+
+// @route   POST api/profiles/education
+// @desc    Add education route
+// @access  Private
+router.post(
+  '/education',
+  passport.authenticate('jwt', { session: false }),
+  profileController.addEducation
+);
+
+// @route   POST api/profiles/education
+// @desc    Add education route
+// @access  Private
 
 module.exports = router;

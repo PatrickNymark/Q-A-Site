@@ -7,7 +7,7 @@ const app = express();
 
 // Routes
 const posts = require('./routes/api/posts');
-const profiles = require('./routes/api/profile');
+const profiles = require('./routes/api/profiles');
 const users = require('./routes/auth/users');
 
 // Passport Config
