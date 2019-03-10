@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
   });
 });
 
-// @route   POST api/posts/
+// @route   POST api/profiles/
 // @desc    Add or update profile route
 // @access  Private
 router.post(

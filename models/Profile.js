@@ -10,6 +10,18 @@ const ProfileSchema = new Schema({
     type: String,
     max: 100
   },
+  followers: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'users'
+    }
+  ],
+  following: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'users'
+    }
+  ],
   company: {
     type: String
   },
