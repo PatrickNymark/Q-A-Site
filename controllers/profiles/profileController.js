@@ -121,8 +121,38 @@ exports.addEducation = (req, res) => {
       current: req.body.current
     };
 
+    // Remove education
     profile.education.unshift(newEducation);
 
+    // Save updated profile
+    profile.save().then(profile => res.json(profile));
+  });
+};
+
+/*
+
+  __DELETE EDUCATION
+
+*/
+exports.deleteEducation = (req, res) => {
+  Profile.findOne({ user: req.user.id }).then(profile => {
+    if (!profile) {
+      return res.status(400).json({ msg: 'Profile not found' });
+    }
+
+    const removeIndex = profile.education
+      .map(education => education._id.toString())
+      .indexOf(req.params.edu_id);
+
+    // Check if exists
+    if (removeIndex < 0) {
+      return res.json({ msg: 'Education not found' });
+    }
+
+    //  Remove education
+    profile.education.splice(removeIndex, 1);
+
+    // Save updated profile
     profile.save().then(profile => res.json(profile));
   });
 };
