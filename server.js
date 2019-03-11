@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const logger = require('morgan');
 
 // Initialize
 const app = express();
@@ -24,6 +25,9 @@ mongoose
 // Body-parser middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Morgan middleware
+app.use(logger('dev'));
 
 // Router middleware
 app.use('/api/posts', posts);
