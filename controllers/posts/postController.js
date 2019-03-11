@@ -1,6 +1,9 @@
 // Load model
 const Post = require('../../models/Post');
 
+// Validator
+const postValidator = require('../../validation/posts/post');
+
 /*
 
   __COMMENTS AND LIKES CONTROLLERS
@@ -16,6 +19,11 @@ exports.likes = require('./likes');
 */
 exports.addNewPost = (req, res) => {
   const { title, text } = req.body;
+  const { isValid, errors } = postValidator(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
 
   // Create new post
   const newPost = new Post({
@@ -28,7 +36,7 @@ exports.addNewPost = (req, res) => {
   newPost
     .save()
     .then(post => res.json(post))
-    .catch(err => res.status(200).json(err.message));
+    .catch(err => res.status(400).json(err.message));
 };
 
 /*

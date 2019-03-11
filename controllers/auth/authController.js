@@ -6,8 +6,8 @@ const keys = require('../../config/keys');
 const User = require('../../models/User');
 
 // Validator
-const registerValidator = require('../../validation/register');
-const loginValidator = require('../../validation/login');
+const registerValidator = require('../../validation/auth/register');
+const loginValidator = require('../../validation/auth/login');
 
 /*
 
@@ -15,6 +15,7 @@ const loginValidator = require('../../validation/login');
 
 */
 exports.registerUser = (req, res) => {
+  const { firstName, lastName, email, password } = req.body;
   const { isValid, errors } = registerValidator(req.body);
 
   // Validate input
