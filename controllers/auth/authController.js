@@ -47,11 +47,11 @@ exports.registerUser = (req, res) => {
           newUser
             .save()
             .then(user => res.json(user))
-            .catch(err => res.status(400).json(err));
+            .catch(err => res.status(500).json(err.message));
         });
       });
     })
-    .catch(err => res.status(400).json(err));
+    .catch(err => res.status(500).json(err.message));
 };
 
 /*
@@ -101,7 +101,7 @@ exports.loginUser = (req, res) => {
             }
           );
         })
-        .catch(err => res.status(400).json(err));
+        .catch(err => res.status(500).json(err));
     })
-    .catch(err => res.status(400).json(err));
+    .catch(err => res.status(500).json(err));
 };

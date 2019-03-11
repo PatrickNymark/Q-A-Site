@@ -36,7 +36,7 @@ exports.addNewPost = (req, res) => {
   newPost
     .save()
     .then(post => res.json(post))
-    .catch(err => res.status(400).json(err.message));
+    .catch(err => res.status(500).json(err.message));
 };
 
 /*
@@ -47,18 +47,23 @@ exports.addNewPost = (req, res) => {
 exports.deletePost = (req, res) => {
   const { post_id } = req.params;
 
-  Post.findById(post_id).then(post => {
-    // Post not found
-    if (!post) {
-      return res.status(400).json({ msg: 'Post not found' });
-    }
+  Post.findById(post_id)
+    .then(post => {
+      // Check if post exists
+      if (!post) {
+        return res.status(400).json({ notfound: 'Post not found' });
+      }
 
-    // Check if user is associated to post
-    if (post.creator.toString() !== req.user.id) {
-      return res.status(400).json({ assocation: false });
-    }
+      // Check if user is associated to post
+      if (post.creator.toString() !== req.user.id) {
+        return res.status(400).json({ assocation: false });
+      }
 
-    // Remove post
-    post.remove().then(post => res.json(post));
-  });
+      // Remove post
+      post
+        .remove()
+        .then(post => res.json(post))
+        .catch(err => res.status(500).json(err.message));
+    })
+    .catch(err => res.status(500).json(err.message));
 };
