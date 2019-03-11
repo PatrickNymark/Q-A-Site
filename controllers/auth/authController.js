@@ -7,6 +7,7 @@ const User = require('../../models/User');
 
 // Validator
 const registerValidator = require('../../validation/register');
+const loginValidator = require('../../validation/login');
 
 /*
 
@@ -21,33 +22,35 @@ exports.registerUser = (req, res) => {
     return res.status(400).json(errors);
   }
 
-  User.findOne({ email }).then(user => {
-    // Check if user exists
-    if (user) {
-      errors.email = 'User already exists';
-      return res.status(400).json(errors);
-    }
+  User.findOne({ email })
+    .then(user => {
+      // Check if user exists
+      if (user) {
+        errors.email = 'User already exists';
+        return res.status(400).json(errors);
+      }
 
-    // Generate salt
-    bcrypt.genSalt(10, (err, salt) => {
-      // Hash password
-      bcrypt.hash(password, salt).then(hashedPassword => {
-        // Create new user
-        const newUser = new User({
-          firstName,
-          lastName,
-          email,
-          password: hashedPassword
+      // Generate salt
+      bcrypt.genSalt(10, (err, salt) => {
+        // Hash password
+        bcrypt.hash(password, salt).then(hashedPassword => {
+          // Create new user
+          const newUser = new User({
+            firstName,
+            lastName,
+            email,
+            password: hashedPassword
+          });
+
+          // Save new user to database
+          newUser
+            .save()
+            .then(user => res.json(user))
+            .catch(err => res.status(400).json(err));
         });
-
-        // Save new user to database
-        newUser
-          .save()
-          .then(user => res.json(user))
-          .catch(err => res.status(400).json(err));
       });
-    });
-  });
+    })
+    .catch(err => res.status(400).json(err));
 };
 
 /*
@@ -57,12 +60,18 @@ exports.registerUser = (req, res) => {
 */
 exports.loginUser = (req, res) => {
   const { email, password } = req.body;
+  const { isValid, errors } = loginValidator(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
 
   User.findOne({ email })
     .then(user => {
       // User not found
       if (!user) {
-        return res.status(400).json({ msg: 'Email does not exist' });
+        errors.email = 'Email does not exist';
+        return res.status(400).json(errors);
       }
 
       // Compare password with crypted
@@ -71,7 +80,8 @@ exports.loginUser = (req, res) => {
         .then(isMatch => {
           // Passwords dont match
           if (!isMatch) {
-            res.status(400).json({ msg: 'Password Incorrect' });
+            errors.password = 'Password incorrect';
+            return res.status(400).json(errors);
           }
 
           // Create jwt payload
