@@ -59,10 +59,10 @@ router.post(
   postController.likes.likePost
 );
 
-// @route   POST api/posts/unlike/:post_id
+// @route   DELETE api/posts/unlike/:post_id
 // @desc    Unlike post route
 // @access  Private
-router.post(
+router.delete(
   '/unlike/:post_id',
   passport.authenticate('jwt', { session: false }),
   postController.likes.unlikePost

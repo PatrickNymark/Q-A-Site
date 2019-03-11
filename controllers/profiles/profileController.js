@@ -159,7 +159,7 @@ exports.deleteEducation = (req, res) => {
 
 /*
 
-  __ADD SOCIAL
+  __ADD OR UPDATE SOCIAL
 
 */
 exports.addOrUpdateSocial = (req, res) => {

@@ -55,7 +55,7 @@ exports.deletePost = (req, res) => {
 
     // Check if user is associated to post
     if (post.creator.toString() !== req.user.id) {
-      return res.status(400).json({ msg: 'User not assicated with post' });
+      return res.status(400).json({ assocation: false });
     }
 
     // Remove post
