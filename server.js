@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const logger = require('morgan');
+const fs = require('fs');
 
 // Initialize
 const app = express();
@@ -28,6 +29,13 @@ app.use(express.json());
 
 // Morgan middleware
 app.use(logger('dev'));
+app.use(
+  logger('common', {
+    stream: fs.createWriteStream(__dirname + '/logs/' + 'access.log', {
+      flags: 'a'
+    })
+  })
+);
 
 // Router middleware
 app.use('/api/posts', posts);
