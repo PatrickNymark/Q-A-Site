@@ -51,21 +51,12 @@ router.delete(
 );
 
 // @route   POST api/posts/like/:post_id
-// @desc    Like post route
+// @desc    Like or unlike post route
 // @access  Private
 router.post(
   '/like/:post_id',
   passport.authenticate('jwt', { session: false }),
   postController.likes.likePost
-);
-
-// @route   DELETE api/posts/unlike/:post_id
-// @desc    Unlike post route
-// @access  Private
-router.delete(
-  '/unlike/:post_id',
-  passport.authenticate('jwt', { session: false }),
-  postController.likes.unlikePost
 );
 
 module.exports = router;
