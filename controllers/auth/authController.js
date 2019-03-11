@@ -5,18 +5,27 @@ const keys = require('../../config/keys');
 // Load Model
 const User = require('../../models/User');
 
+// Validator
+const registerValidator = require('../../validation/register');
+
 /*
 
   __REGISTER USER
 
 */
 exports.registerUser = (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
+  const { isValid, errors } = registerValidator(req.body);
+
+  // Validate input
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
 
   User.findOne({ email }).then(user => {
     // Check if user exists
     if (user) {
-      return res.status(400).json({ msg: 'User already exists' });
+      errors.email = 'User already exists';
+      return res.status(400).json(errors);
     }
 
     // Generate salt
