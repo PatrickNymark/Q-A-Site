@@ -1,6 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
+const crypto = require('crypto');
+
+// Load mailer
+const transporter = require('../../middleware/mailer').transporter;
 
 // Load Model
 const User = require('../../models/User');
@@ -31,25 +35,29 @@ exports.registerUser = (req, res) => {
         return res.status(400).json(errors);
       }
 
-      // Generate salt
-      bcrypt.genSalt(10, (err, salt) => {
-        // Hash password
-        bcrypt.hash(password, salt).then(hashedPassword => {
-          // Create new user
-          const newUser = new User({
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword
+      const newUser = new User({
+        firstName,
+        lastName,
+        email,
+        password
+      });
+
+      newUser
+        .save()
+        .then(user => {
+          transporter.sendMail({
+            to: email,
+            from: 'replica@quora.com',
+            subject: 'Signup Succeed',
+            html: `
+              <h1>You successfully signed up</h1>
+              <p>To verify account click her <a href="/api/auth/verify/${email}"></a>
+            `
           });
 
-          // Save new user to database
-          newUser
-            .save()
-            .then(user => res.json(user))
-            .catch(err => res.status(500).json(err.message));
-        });
-      });
+          res.json(user);
+        })
+        .catch(err => res.status(500).json(err.message));
     })
     .catch(err => res.status(500).json(err.message));
 };
@@ -74,6 +82,9 @@ exports.loginUser = (req, res) => {
         errors.email = 'Email does not exist';
         return res.status(400).json(errors);
       }
+
+      console.log(password);
+      console.log(user.password);
 
       // Compare password with crypted
       bcrypt
@@ -104,4 +115,80 @@ exports.loginUser = (req, res) => {
         .catch(err => res.status(500).json(err));
     })
     .catch(err => res.status(500).json(err));
+};
+
+/*
+
+  __FORGOT PASSWORD
+
+*/
+exports.forgotPassword = (req, res) => {
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      res.json(err);
+    }
+
+    console.log(req.body.email);
+
+    const token = buffer.toString('hex');
+    User.findOne({ email: req.body.email }).then(user => {
+      if (!user) {
+        return res.status(400).json({ notfound: 'User not found' });
+      }
+
+      user.resetToken = token;
+      user.resetTokenExperation = Date.now() + 360000; // 1 hour
+
+      user.save().then(user => {
+        transporter.sendMail({
+          to: user.email,
+          from: 'quora@replica.com',
+          subject: 'Reset Password',
+          html: `
+            <h1>You have requested to reset password</h1>
+            <p>Click her to reset <a href="http://localhost:3000/auth/${token}">link</a></p>
+          `
+        });
+
+        res.json(user);
+      });
+    });
+  });
+};
+
+/*
+
+  __RESET PASSWORD
+
+*/
+exports.resetPassword = (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  User.findOne({ resetToken: token }).then(user => {
+    user.password = newPassword;
+    user.resetToken = undefined;
+    user.resetTokenExperation = undefined;
+
+    user.save().then(user => {
+      transporter.sendMail({
+        to: user.email,
+        from: 'quora@mail.com',
+        subject: 'Password successfully reset',
+        html: `
+          <h1>Your password was succesfully reset</h1>
+        `
+      });
+      res.json(user);
+    });
+  });
+};
+
+/*
+
+  __VERIFY USER
+
+*/
+exports.verifyUser = (req, res) => {
+  User.findOne({ email: req.body.email }).then(user => {});
 };
