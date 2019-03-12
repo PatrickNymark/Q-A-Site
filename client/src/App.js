@@ -6,8 +6,10 @@ import store from './store';
 
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Test from './components/Test';
-import Login from './components/Login';
-import Register from './components/Register';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
+import Forgot from './components/auth/Forgot';
+import Reset from './components/auth/Reset';
 
 class App extends Component {
   render() {
@@ -19,6 +21,8 @@ class App extends Component {
             <Route exact path="/test" component={Test} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
+            <Route exact path="/forgot" component={Forgot} />
+            <Route exact path="/auth/:token" component={Reset} />
           </div>
         </Router>
       </Provider>
