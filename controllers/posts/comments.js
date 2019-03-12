@@ -1,6 +1,9 @@
 // Load model
 const Post = require('../../models/Post');
 
+// Validator
+const commentValidator = require('../../validation/posts/comment');
+
 /*
 
   __ADD COMMENT
@@ -8,12 +11,17 @@ const Post = require('../../models/Post');
 */
 exports.addComment = (req, res) => {
   const { post_id } = req.params;
+  const { isValid, errors } = commentValidator(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
 
   Post.findById(post_id)
     .then(post => {
       // Post not found
       if (!post) {
-        return res.status(400).json({ msg: 'Post not found' });
+        return res.status(400).json({ notfound: 'Post not found' });
       }
 
       // Create new post payload
@@ -26,9 +34,12 @@ exports.addComment = (req, res) => {
       post.comments.unshift(newComment);
 
       // Save updated post
-      post.save().then(post => res.json(post));
+      post
+        .save()
+        .then(post => res.json(post))
+        .catch(err => res.status(500).json(err.message));
     })
-    .catch(err => res.status(400).json(err));
+    .catch(err => res.status(500).json(err.message));
 };
 
 /*
@@ -43,7 +54,7 @@ exports.deleteComment = (req, res) => {
     .then(post => {
       // No post found
       if (!post) {
-        return res.status(400).json({ msg: 'Post not found' });
+        return res.status(400).json({ notfound: 'Post not found' });
       }
 
       // Check if comment exists
@@ -51,7 +62,7 @@ exports.deleteComment = (req, res) => {
         post.comments.filter(comment => comment._id.toString() === comment_id)
           .length === 0
       ) {
-        return res.status(400).json({ msg: 'Comment not found' });
+        return res.status(400).json({ notfound: 'Comment not found' });
       }
 
       // Get index of comment to remove
