@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { registerUser } from '../../actions/authActions';
 
-export default class Register extends Component {
+// Semantic UI
+import { Container, Grid, Form, Button } from 'semantic-ui-react';
+
+class Register extends Component {
   onChange = e => {
     this.setState({
       [e.target.name]: e.target.value
@@ -18,43 +22,57 @@ export default class Register extends Component {
       password: this.state.password
     };
 
-    axios
-      .post('/api/auth/register', payload)
-      .then(res => this.setState({ user: res.data }))
-      .catch(err => this.setState({ errors: err.response.data }));
+    this.props.registerUser(payload, this.props.history);
   };
   render() {
-    console.log(this.state);
     return (
-      <div>
-        <form onSubmit={this.onSubmit}>
-          <input
-            name="firstName"
-            onChange={this.onChange}
-            type="text"
-            placeholder="First Name"
-          />
-          <input
-            name="lastName"
-            onChange={this.onChange}
-            type="text"
-            placeholder="Last Name"
-          />
-          <input
-            name="email"
-            onChange={this.onChange}
-            type="text"
-            placeholder="Email"
-          />
-          <input
-            name="password"
-            onChange={this.onChange}
-            type="password"
-            placeholder="Password"
-          />
-          <button type="submit">Register</button>
-        </form>
-      </div>
+      <Container>
+        <Grid style={{ marginTop: '100px' }} textAlign="center">
+          <Form onSubmit={this.onSubmit}>
+            <Form.Group>
+              <Form.Input
+                name="firstName"
+                onChange={this.onChange}
+                type="text"
+                placeholder="First Name"
+              />
+              <Form.Input
+                name="lastName"
+                onChange={this.onChange}
+                type="text"
+                placeholder="Last Name"
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Input
+                name="email"
+                onChange={this.onChange}
+                type="text"
+                placeholder="Email"
+              />
+              <Form.Input
+                name="password"
+                onChange={this.onChange}
+                type="password"
+                placeholder="Password"
+              />
+            </Form.Group>
+
+            <Button fluid type="submit">
+              Register
+            </Button>
+          </Form>
+        </Grid>
+      </Container>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps,
+  { registerUser }
+)(Register);

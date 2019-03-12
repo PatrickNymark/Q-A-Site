@@ -1,4 +1,5 @@
-import { TEST_DISPATCH, REGISTER_USER, GET_ERRORS } from '../actions/types';
+import { LOGIN_USER, GET_ERRORS } from '../actions/types';
+import isEmpty from '../helpers/isEmpty';
 
 const initialState = {
   isAuthenticated: false,
@@ -8,10 +9,11 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case REGISTER_USER:
+    case LOGIN_USER:
       return {
         ...state,
-        isWorking: true
+        isAuthenticated: !isEmpty(action.payload),
+        user: action.payload
       };
 
     case GET_ERRORS: {

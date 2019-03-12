@@ -1,7 +1,9 @@
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 
 // Constants
-import { GET_ERRORS } from './types';
+import { GET_ERRORS, LOGIN_USER } from './types';
+import setAuthToken from '../helpers/setAuthToken';
 
 export const registerUser = (userData, history) => dispatch => {
   axios
@@ -13,4 +15,20 @@ export const registerUser = (userData, history) => dispatch => {
         payload: err.response.data
       })
     );
+};
+
+export const loginUser = userData => dispatch => {
+  axios
+    .post('/api/auth/login', userData)
+    .then(res => {
+      const { token } = res.data;
+      // Save to localstorage
+      localStorage.setItem('jwtToken', token);
+      // Set axois auth header
+      setAuthToken(token);
+      // Set current user
+      const decoded = jwt_decode(token);
+      dispatch({ type: LOGIN_USER, payload: decoded });
+    })
+    .catch(err => dispatch({ type: GET_ERRORS, payload: err.reponse.message }));
 };
