@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
+const transporter = require('../middleware/mailer').transporter;
 
 const UserSchema = new Schema({
   firstName: {
@@ -50,5 +51,22 @@ UserSchema.pre('save', function(next) {
     });
   });
 });
+
+UserSchema.methods.comparePassword = function(candidatePassword) {
+  bcrypt.compare(candidatePassword, this.password).then(isMatch => {
+    return isMatch;
+  });
+};
+
+UserSchema.methods.sendSignupMail = function(data) {
+  transporter.sendMail({
+    to: this.email,
+    from: 'quora@replica.com',
+    subject: 'Signup Success',
+    html: `
+      <h1>You have succesfully signed up</h1>
+    `
+  });
+};
 
 module.exports = User = mongoose.model('users', UserSchema);

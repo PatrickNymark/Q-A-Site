@@ -45,15 +45,8 @@ exports.registerUser = (req, res) => {
       newUser
         .save()
         .then(user => {
-          transporter.sendMail({
-            to: email,
-            from: 'replica@quora.com',
-            subject: 'Signup Succeed',
-            html: `
-              <h1>You successfully signed up</h1>
-              <p>To verify account click her <a href="/api/auth/verify/${email}"></a>
-            `
-          });
+          // Send signup succes mail
+          user.sendSignupMail();
 
           res.json(user);
         })
@@ -83,36 +76,27 @@ exports.loginUser = (req, res) => {
         return res.status(400).json(errors);
       }
 
-      console.log(password);
-      console.log(user.password);
-
       // Compare password with crypted
-      bcrypt
-        .compare(password, user.password)
-        .then(isMatch => {
-          // Passwords dont match
-          if (!isMatch) {
-            errors.password = 'Password incorrect';
-            return res.status(400).json(errors);
-          }
+      if (!user.comparePassword) {
+        errors.password = 'Password incorrect';
+        return res.status(400).json(errors);
+      }
 
-          // Create jwt payload
-          const payload = {
-            id: user._id,
-            name: user.firstName + ' ' + user.lastName
-          };
+      // Create jwt payload
+      const payload = {
+        id: user._id,
+        name: user.firstName + ' ' + user.lastName
+      };
 
-          // Sign jwt token
-          jwt.sign(
-            payload,
-            keys.secretOrKey,
-            { expiresIn: 36000 },
-            (err, token) => {
-              res.json({ success: true, token: 'bearer ' + token });
-            }
-          );
-        })
-        .catch(err => res.status(500).json(err));
+      // Sign jwt token
+      jwt.sign(
+        payload,
+        keys.secretOrKey,
+        { expiresIn: 36000 },
+        (err, token) => {
+          res.json({ success: true, token: 'bearer ' + token });
+        }
+      );
     })
     .catch(err => res.status(500).json(err));
 };
@@ -127,8 +111,6 @@ exports.forgotPassword = (req, res) => {
     if (err) {
       res.json(err);
     }
-
-    console.log(req.body.email);
 
     const token = buffer.toString('hex');
     User.findOne({ email: req.body.email }).then(user => {
@@ -164,7 +146,6 @@ exports.forgotPassword = (req, res) => {
 exports.resetPassword = (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
-
   User.findOne({ resetToken: token }).then(user => {
     user.password = newPassword;
     user.resetToken = undefined;
@@ -190,5 +171,14 @@ exports.resetPassword = (req, res) => {
 
 */
 exports.verifyUser = (req, res) => {
-  User.findOne({ email: req.body.email }).then(user => {});
+  crypto.randomBytes(32, (err, buffer) => {
+    const token = buffer.toString('hex');
+
+    User.findOne({ email: req.params.email });
+  });
+  User.findOne({ email: req.params.email }).then(user => {
+    user.isVerfied = true;
+
+    user.save().then(user => res.json(user));
+  });
 };
