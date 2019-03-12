@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { Link } from 'react-router-dom';
 import './App.css';
 
-import { Provider } from 'react-redux';
+// Redux Store
 import store from './store';
 
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+// Components
 import Test from './components/Test';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
@@ -18,6 +21,14 @@ class App extends Component {
         <Router>
           <div className="App">
             <h1>React-Redux Boilerplate</h1>
+            <ul style={{ display: 'inline-block' }}>
+              <li>
+                <Link to="/login">Login</Link>
+              </li>
+              <li>
+                <Link to="/register">Register</Link>
+              </li>
+            </ul>
             <Route exact path="/test" component={Test} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
