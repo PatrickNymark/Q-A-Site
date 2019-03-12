@@ -76,7 +76,7 @@ exports.loginUser = (req, res) => {
         return res.status(400).json(errors);
       }
 
-      // Compare password with crypted
+      // Check for correct password
       if (!user.comparePassword) {
         errors.password = 'Password incorrect';
         return res.status(400).json(errors);
@@ -109,7 +109,7 @@ exports.loginUser = (req, res) => {
 exports.forgotPassword = (req, res) => {
   crypto.randomBytes(32, (err, buffer) => {
     if (err) {
-      res.json(err);
+      res.status(400).json(err.message);
     }
 
     const token = buffer.toString('hex');
@@ -122,15 +122,7 @@ exports.forgotPassword = (req, res) => {
       user.resetTokenExperation = Date.now() + 360000; // 1 hour
 
       user.save().then(user => {
-        transporter.sendMail({
-          to: user.email,
-          from: 'quora@replica.com',
-          subject: 'Reset Password',
-          html: `
-            <h1>You have requested to reset password</h1>
-            <p>Click her to reset <a href="http://localhost:3000/auth/${token}">link</a></p>
-          `
-        });
+        user.sendResetPasswordMail();
 
         res.json(user);
       });

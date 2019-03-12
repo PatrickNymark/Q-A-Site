@@ -58,13 +58,27 @@ UserSchema.methods.comparePassword = function(candidatePassword) {
   });
 };
 
-UserSchema.methods.sendSignupMail = function(data) {
+UserSchema.methods.sendSignupMail = function() {
   transporter.sendMail({
     to: this.email,
     from: 'quora@replica.com',
     subject: 'Signup Success',
     html: `
       <h1>You have succesfully signed up</h1>
+    `
+  });
+};
+
+UserSchema.methods.sendResetPasswordMail = function() {
+  transporter.sendMail({
+    to: this.email,
+    from: 'quora@replica.com',
+    subject: 'Reset Password',
+    html: `
+      <h1>You have requested to reset password</h1>
+      <p>Click her to reset <a href="http://localhost:3000/auth/${
+        this.resetToken
+      }">link</a></p>
     `
   });
 };
