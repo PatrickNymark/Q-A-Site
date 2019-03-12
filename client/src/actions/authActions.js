@@ -30,5 +30,5 @@ export const loginUser = userData => dispatch => {
       const decoded = jwt_decode(token);
       dispatch({ type: LOGIN_USER, payload: decoded });
     })
-    .catch(err => dispatch({ type: GET_ERRORS, payload: err.reponse.message }));
+    .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
 };

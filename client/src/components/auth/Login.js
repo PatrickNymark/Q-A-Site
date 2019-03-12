@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
+
+// Actions
+import { loginUser } from '../../actions/authActions';
 
 // Semantic UI
 import { Container, Grid, Form, Button } from 'semantic-ui-react';
 
-export default class Login extends Component {
+class Login extends Component {
   onChange = e => {
     this.setState({
       [e.target.name]: e.target.value
@@ -18,6 +21,8 @@ export default class Login extends Component {
       email: this.state.email,
       password: this.state.password
     };
+
+    this.props.loginUser(payload);
   };
   render() {
     return (
@@ -45,3 +50,12 @@ export default class Login extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(
+  null,
+  { loginUser }
+)(Login);
