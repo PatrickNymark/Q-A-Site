@@ -24,13 +24,20 @@ class Login extends Component {
 
     this.props.loginUser(payload);
   };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.isAuthenticated) {
+      this.props.history.push('/dashboard');
+    }
+  }
+
   render() {
     return (
       <Container>
         <Grid style={{ marginTop: '100px' }} textAlign="center">
-          <Form onSubmit={this.onSubmit}>
+          <Form style={{ minWidth: '450px' }} onSubmit={this.onSubmit}>
             <Form.Input
-              name="Email"
+              name="email"
               onChange={this.onChange}
               type="text"
               placeholder="Email"
@@ -56,6 +63,6 @@ const mapStateToProps = state => ({
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   { loginUser }
 )(Login);
