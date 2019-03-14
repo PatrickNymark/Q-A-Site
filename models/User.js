@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
-const transporter = require('../middleware/mailer');
 
 const UserSchema = new Schema({
   firstName: {

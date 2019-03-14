@@ -35,12 +35,12 @@ router.post('/reset', authController.reset.forgotPassword);
 router.post('/reset/:token', authController.reset.resetPassword);
 
 // @route   POST api/auth/verify
-// @desc    Request to verift user route
+// @desc    Request to verify user route
 // @access  Public
 router.post('/verify/', authController.verify.verifyUser);
 
-// @route   POST api/auth/verify/
-// @desc    Reset password route
+// @route   GET api/auth/verify/
+// @desc    Verify user route
 // @access  Public
 router.get('/verify/:token', authController.verify.confirmUser);
 
