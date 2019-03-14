@@ -27,11 +27,21 @@ router.post('/login', authController.loginUser);
 // @route   POST api/auth/reset
 // @desc    Reset password route
 // @access  Public
-router.post('/forgot', authController.forgotPassword);
+router.post('/reset', authController.reset.forgotPassword);
 
-// @route   GET api/auth/reset/new
+// @route   POST api/auth/reset/:token
 // @desc    Reset password route
 // @access  Public
-router.post('/reset/:token', authController.resetPassword);
+router.post('/reset/:token', authController.reset.resetPassword);
+
+// @route   POST api/auth/verify
+// @desc    Request to verift user route
+// @access  Public
+router.post('/verify/', authController.verify.verifyUser);
+
+// @route   POST api/auth/verify/
+// @desc    Reset password route
+// @access  Public
+router.get('/verify/:token', authController.verify.confirmUser);
 
 module.exports = router;

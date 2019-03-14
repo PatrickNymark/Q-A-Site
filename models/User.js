@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
-const transporter = require('../middleware/mailer').transporter;
+const transporter = require('../middleware/mailer');
 
 const UserSchema = new Schema({
   firstName: {
@@ -25,10 +25,10 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false
   },
-  resetToken: {
+  passwordResetToken: {
     type: String
   },
-  resetTokenExperation: {
+  passwordResetExpires: {
     type: Date
   },
   createdAt: {
@@ -52,34 +52,11 @@ UserSchema.pre('save', function(next) {
   });
 });
 
-UserSchema.methods.comparePassword = function(candidatePassword) {
-  bcrypt.compare(candidatePassword, this.password).then(isMatch => {
-    return isMatch;
-  });
-};
+UserSchema.methods.comparePassword = function(candidatePassword, cb) {
+  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+    if (err) return cb(err);
 
-UserSchema.methods.sendSignupMail = function() {
-  transporter.sendMail({
-    to: this.email,
-    from: 'quora@replica.com',
-    subject: 'Signup Success',
-    html: `
-      <h1>You have succesfully signed up</h1>
-    `
-  });
-};
-
-UserSchema.methods.sendResetPasswordMail = function() {
-  transporter.sendMail({
-    to: this.email,
-    from: 'quora@replica.com',
-    subject: 'Reset Password',
-    html: `
-      <h1>You have requested to reset password</h1>
-      <p>Click her to reset <a href="http://localhost:3000/auth/${
-        this.resetToken
-      }">link</a></p>
-    `
+    return cb(null, isMatch);
   });
 };
 
