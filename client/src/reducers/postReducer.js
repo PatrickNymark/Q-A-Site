@@ -1,7 +1,8 @@
-import { TEST_DISPATCH } from '../actions/types';
+import { TEST_DISPATCH, GET_POST, GET_POST_ERRORS } from '../actions/types';
 
 const initialState = {
-  isWorking: false
+  post: {},
+  errors: {}
 };
 
 export default function(state = initialState, action) {
@@ -10,6 +11,16 @@ export default function(state = initialState, action) {
       return {
         ...state,
         isWorking: true
+      };
+
+    case GET_POST:
+      return {
+        ...state
+      };
+    case GET_POST_ERRORS:
+      return {
+        ...state,
+        errors: action.payload
       };
     default:
       return state;

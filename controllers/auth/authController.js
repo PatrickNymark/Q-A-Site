@@ -107,7 +107,7 @@ exports.loginUser = (req, res) => {
         }
         // Create jwt payload
         const payload = {
-          id: user._id,
+          id: user.id,
           name: user.firstName + ' ' + user.lastName
         };
 

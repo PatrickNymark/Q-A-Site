@@ -1,4 +1,4 @@
-import { LOGIN_USER, GET_ERRORS } from '../actions/types';
+import { LOGIN_USER, GET_AUTH_ERRORS, GET_USER } from '../actions/types';
 import isEmpty from '../helpers/isEmpty';
 
 const initialState = {
@@ -16,12 +16,13 @@ export default function(state = initialState, action) {
         user: action.payload
       };
 
-    case GET_ERRORS: {
+    case GET_AUTH_ERRORS: {
       return {
         ...state,
         errors: action.payload
       };
     }
+
     default:
       return state;
   }

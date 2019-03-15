@@ -1,6 +1,20 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import {
+  Container,
+  Menu,
+  Button,
+  Icon,
+  Modal,
+  Image,
+  Header,
+  Grid,
+  Input,
+  TextArea,
+  Form
+} from 'semantic-ui-react';
+
 export default class Forgot extends Component {
   onChange = e => {
     this.setState({
