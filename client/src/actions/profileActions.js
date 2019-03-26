@@ -14,9 +14,10 @@ export const getProfile = () => dispatch => {
       });
     })
     .catch(err => {
+      console.log(err);
       dispatch({
         type: GET_PROFILE_ERRORS,
-        payload: err.response.data
+        payload: err
       });
     });
 };

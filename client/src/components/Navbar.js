@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { logoutUser } from '../actions/authActions';
 
-import { Container, Menu, Button, Icon } from 'semantic-ui-react';
-import AddQuestion from './AddQuestion';
+import { Container, Menu, Button, Icon, Popup } from 'semantic-ui-react';
+
+import AddModal from './add-question/AddModal';
 
 class Navbar extends Component {
   constructor(props) {
@@ -22,86 +24,84 @@ class Navbar extends Component {
   render() {
     const { activeItem } = this.state;
 
-    if (this.props.auth.isAuthenticated) {
-      return (
-        <Menu>
-          <Container>
-            <Menu.Item
-              as={Link}
-              to="/"
-              name="home"
-              active={activeItem === 'home'}
+    const notAuthenticatedLinks = (
+      <React.Fragment>
+        <Menu.Menu position="right">
+          <Menu.Item>
+            <Button
+              color="red"
+              active={activeItem === 'login'}
+              name="login"
               onClick={this.handleItemClick}
-            >
-              Home
-            </Menu.Item>
-            <Menu.Item
               as={Link}
-              to="/questions"
-              name="questions"
-              active={activeItem === 'questions'}
-              onClick={this.handleItemClick}
+              to="/login"
             >
-              Questions
-            </Menu.Item>
-            <Menu.Menu position="right">
-              <Menu.Item
-                active={activeItem === 'dashboard'}
-                name="dashboard"
-                as={Link}
-                to="/dashboard"
-                onClick={this.handleItemClick}
-              >
-                <Icon style={{ margin: '0px' }} size="big" name="user circle" />
-              </Menu.Item>
+              Login
+            </Button>
+          </Menu.Item>
+        </Menu.Menu>
+      </React.Fragment>
+    );
 
-              <AddQuestion
-                activeItem={activeItem}
-                handleItemClick={this.handleItemClick}
-              />
-            </Menu.Menu>
-          </Container>
-        </Menu>
-      );
-    } else {
-      return (
-        <Menu>
-          <Container>
-            <Menu.Item
-              as={Link}
-              to="/"
-              name="home"
-              active={activeItem === 'home'}
-              onClick={this.handleItemClick}
-            >
-              Home
-            </Menu.Item>
-            <Menu.Item
-              as={Link}
-              to="/questions"
-              name="questions"
-              active={activeItem === 'questions'}
-              onClick={this.handleItemClick}
-            >
-              Questions
-            </Menu.Item>
-            <Menu.Menu position="right">
-              <Menu.Item>
-                <Button
-                  active={activeItem === 'addQuestion'}
-                  name="addQuestion"
-                  onClick={this.handleItemClick}
-                  as={Link}
-                  to="/questions/add"
-                >
-                  Login
-                </Button>
-              </Menu.Item>
-            </Menu.Menu>
-          </Container>
-        </Menu>
-      );
-    }
+    const authenticatedLinks = (
+      <React.Fragment>
+        <Menu.Menu position="right">
+          <Menu.Item
+            active={activeItem === 'dashboard'}
+            name="dashboard"
+            as={Link}
+            to="/dashboard"
+            onClick={this.handleItemClick}
+          >
+            <Popup
+              on="click"
+              header="Test Header"
+              content={<Button onClick={this.props.logoutUser}>Logout</Button>}
+              trigger={
+                <Icon
+                  style={{ margin: '0px' }}
+                  color="red"
+                  size="big"
+                  name="user circle"
+                />
+              }
+            />
+          </Menu.Item>
+
+          <Menu.Item>
+            <AddModal />
+          </Menu.Item>
+        </Menu.Menu>
+      </React.Fragment>
+    );
+
+    return (
+      <Menu>
+        <Container>
+          <Menu.Item
+            as={Link}
+            to="/"
+            name="home"
+            active={activeItem === 'home'}
+            onClick={this.handleItemClick}
+          >
+            Home
+          </Menu.Item>
+          <Menu.Item
+            as={Link}
+            to="/questions"
+            name="questions"
+            active={activeItem === 'questions'}
+            onClick={this.handleItemClick}
+          >
+            Questions
+          </Menu.Item>
+          {this.props.auth.isAuthenticated
+            ? authenticatedLinks
+            : notAuthenticatedLinks}
+        </Container>
+      </Menu>
+    );
   }
 }
 
@@ -109,4 +109,7 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(Navbar);
+export default connect(
+  mapStateToProps,
+  { logoutUser }
+)(Navbar);

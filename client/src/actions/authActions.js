@@ -1,8 +1,9 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import isEmpty from '../helpers/isEmpty';
 
 // Constants
-import { GET_AUTH_ERRORS, LOGIN_USER } from './types';
+import { LOGIN_USER_FAILURE, LOGIN_USER_PENDING, LOGIN_USER_SUCCESS } from './types';
 import setAuthToken from '../helpers/setAuthToken';
 
 export const registerUser = (userData, history) => dispatch => {
@@ -10,18 +11,15 @@ export const registerUser = (userData, history) => dispatch => {
     .post('/api/auth/register', userData)
     .then(res => history.push('/login'))
     .catch(err =>
-      dispatch({
-        type: GET_AUTH_ERRORS,
-        payload: err.response.data
-      })
+      console.log(err)
     );
 };
 
 export const loginUser = userData => dispatch => {
+  dispatch({ type: LOGIN_USER_PENDING });
   axios
     .post('/api/auth/login', userData)
     .then(res => {
-      console.log(res.data);
       const { token } = res.data;
       // Save to localstorage
       localStorage.setItem('jwtToken', token);
@@ -29,10 +27,10 @@ export const loginUser = userData => dispatch => {
       setAuthToken(token);
       // Set current user
       const decoded = jwt_decode(token);
-      dispatch({ type: LOGIN_USER, payload: decoded });
+      dispatch({ type: LOGIN_USER_SUCCESS, payload: decoded });
     })
     .catch(err =>
-      dispatch({ type: GET_AUTH_ERRORS, payload: err.response.data })
+      dispatch({ type: LOGIN_USER_FAILURE, payload: err.response.data })
     );
 };
 
@@ -43,5 +41,5 @@ export const logoutUser = () => dispatch => {
   // Remove auth header for future requests
   setAuthToken(false);
   // Set current user to {} which will set isAuthenticated to false
-  dispatch({ type: LOGIN_USER, payload: {} });
+  dispatch({ type: LOGIN_USER_SUCCESS, payload: {} });
 };

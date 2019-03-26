@@ -9,13 +9,11 @@ import './App.css';
 import store from './store';
 
 // Constants
-import { LOGIN_USER } from './actions/types';
+import { LOGIN_USER_SUCCESS } from './actions/types';
 
 // Components
-import Test from './components/Test';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
-import Forgot from './components/auth/Forgot';
 import Reset from './components/auth/Reset';
 import PrivateRoute from './helpers/PrivateRoute';
 import Dashboard from './templates/Dashboard';
@@ -23,7 +21,6 @@ import setAuthToken from './helpers/setAuthToken';
 import Navbar from './components/Navbar';
 import Landing from './components/Landing';
 import Questions from './components/Questions';
-import AddQuestion from './components/AddQuestion';
 
 // Check localStorage for token
 if (localStorage.jwtToken) {
@@ -33,7 +30,7 @@ if (localStorage.jwtToken) {
   const decoded = jwt_decode(localStorage.jwtToken);
   // Set user authentication
   store.dispatch({
-    type: LOGIN_USER,
+    type: LOGIN_USER_SUCCESS,
     payload: decoded
   });
 }
@@ -50,8 +47,10 @@ class App extends Component {
             <Route exact path="/questions" component={Questions} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
-            <Route exact path="/forgot" component={Forgot} />
-            <Route exact path="/auth/:token" component={Reset} />
+
+            <Switch>
+              <Route exact path="/forgot" component={Reset} />
+            </Switch>
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
             </Switch>

@@ -13,8 +13,8 @@ import {
   Button,
   Segment
 } from 'semantic-ui-react';
-import Profile from '../components/Profile';
-import MyQuestions from '../components/MyQuestions';
+import Profile from '../components/dashboard/profile/Profile';
+import MyQuestions from '../components/dashboard/my-questions/MyQuestions';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -55,8 +55,6 @@ class Dashboard extends Component {
       return (
         <div>
           <Container style={{ marginTop: '80px' }}>
-            <h1>Dashboard</h1>
-
             <Menu pointing secondary>
               <Menu.Item
                 name="profile"
@@ -72,26 +70,7 @@ class Dashboard extends Component {
               >
                 My Questions
               </Menu.Item>
-              <Menu.Item
-                name="followers"
-                active={activeItem === 'followers'}
-                onClick={this.handleItemClick}
-              >
-                Followers
-                <Label size="small" style={{ marginBottom: '0' }} color="red">
-                  {profile.followers.length}
-                </Label>
-              </Menu.Item>
-              <Menu.Item
-                name="following"
-                active={activeItem === 'following'}
-                onClick={this.handleItemClick}
-              >
-                Following
-                <Label size="small" style={{ marginBottom: '0' }} color="red">
-                  {profile.following.length}
-                </Label>
-              </Menu.Item>
+
               <Menu.Menu position="right">
                 <Menu.Item
                   style={{ margin: '0.6px' }}
@@ -116,7 +95,9 @@ class Dashboard extends Component {
             </Menu>
 
             {this.state.activeItem === 'profile' ? <Profile /> : null}
-            {this.state.activeItem === 'myQuestions' ? <MyQuestions /> : null}
+            {this.state.activeItem === 'myQuestions' ? (
+              <MyQuestions user={this.props.auth.user} />
+            ) : null}
           </Container>
         </div>
       );

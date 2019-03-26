@@ -14,7 +14,7 @@ const transporter = require('../../middleware/mailer');
 exports.forgotPassword = (req, res) => {
   User.findOne({ email: req.body.email }).then(user => {
     if (!user) {
-      return res.status(400).json({ notfound: 'User not found' });
+      return res.status(404).json({ notfound: 'User not found' });
     }
 
     // Create token, and set expire date
@@ -25,7 +25,7 @@ exports.forgotPassword = (req, res) => {
     user
       .save()
       .then(user => {
-        var mailOptions = {
+        const mailOptions = {
           from: 'quora-help@replica.com',
           to: user.email,
           subject: 'Quroa Replica - Reset Password ',
@@ -33,12 +33,12 @@ exports.forgotPassword = (req, res) => {
           <h4>Hello, ${user.firstName}</h4>
           <p>You have requested to reset your password, confirm reset by clicking: <a href="http://${
             req.headers.host
-          }/reset/${user.passwordResetToken}">Reset Password</a></p>
+            }/reset/${user.passwordResetToken}">Reset Password</a></p>
       `
         };
 
         // Send mail with verification token
-        transporter.sendMail(mailOptions, function(err) {
+        transporter.sendMail(mailOptions, function (err) {
           if (err) {
             return res.status(500).send({ msg: err.message });
           }
@@ -66,7 +66,6 @@ exports.resetPassword = (req, res) => {
     passwordResetExpires: { $gt: Date.now() }
   })
     .then(user => {
-      console.log(user);
       if (!user) {
         return res.status(400).json({
           expired: 'Reset Password token has expired, please try again'
