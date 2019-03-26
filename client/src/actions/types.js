@@ -6,8 +6,7 @@ export const GET_POST = 'GET_POST';
 export const GET_POST_USER = 'GET_POST_USER';
 
 // Profile
-export const GET_PROFILE = 'GET_PROFILE';
-export const GET_PROFILE_ERRORS = 'GET_PROFILE_ERRORS';
+export const GET_PROFILE_SUCCESS = 'GET_PROFILE';
 export const GET_PROFILE_LOADING = 'GET_PROFILE_LOADING';
 
 // Auth

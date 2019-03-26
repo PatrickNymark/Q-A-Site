@@ -1,4 +1,4 @@
-import { GET_PROFILE, GET_PROFILE_ERRORS, GET_PROFILE_LOADING } from './types';
+import { GET_ERRORS, GET_PROFILE_LOADING, GET_PROFILE_SUCCESS } from './types';
 import axios from 'axios';
 
 export const getProfile = () => dispatch => {
@@ -9,15 +9,14 @@ export const getProfile = () => dispatch => {
     .get('/api/profiles/')
     .then(res => {
       dispatch({
-        type: GET_PROFILE,
+        type: GET_PROFILE_SUCCESS,
         payload: res.data
       });
     })
     .catch(err => {
-      console.log(err);
       dispatch({
-        type: GET_PROFILE_ERRORS,
-        payload: err
+        type: GET_ERRORS,
+        payload: err.response.data
       });
     });
 };
