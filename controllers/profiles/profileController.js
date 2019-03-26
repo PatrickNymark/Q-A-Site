@@ -48,6 +48,22 @@ exports.addOrUpdateProfile = (req, res) => {
 
 /*
 
+  __ GET PROFILE
+
+*/
+exports.getProfile = (req, res) => {
+  Profile.findOne({ user: req.user.id }).then(profile => {
+    if (!profile) {
+      return res.status(400).json({ notfound: 'Profile not found' })
+    }
+
+    res.json(profile)
+  })
+}
+
+
+/*
+
   __ADD EXPERIENCE
 
 */
