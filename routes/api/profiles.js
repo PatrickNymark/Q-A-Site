@@ -8,11 +8,20 @@ const profileController = require('../../controllers/profiles/profileController'
 // @route   GET api/profiles/
 // @desc    Get all profiles route
 // @access  Public
-router.get('/', (req, res) => {
-  Profile.find().then(profiles => {
-    res.json(profiles);
-  });
-});
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    console.log(req.user);
+    Profile.findOne({ user: req.user._id.toString() }).then(profile => {
+      console.log(profile);
+      if (!profile) {
+        return res.status(400).json({ notfound: 'Profile not found' });
+      }
+      res.json(profile);
+    });
+  }
+);
 
 // @route   POST api/profiles/
 // @desc    Add or update profile route
