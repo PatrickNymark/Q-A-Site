@@ -14,6 +14,20 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get(
+  '/user',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Post.find({ creator: req.user._id.toString() }).then(posts => {
+      if (!posts) {
+        return res.status(400).json({ msg: 'No posts' });
+      }
+
+      res.json(posts);
+    });
+  }
+);
+
 // @route   POST api/posts/
 // @desc    Add new post route
 // @access  Private
