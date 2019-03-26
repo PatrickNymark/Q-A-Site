@@ -1,10 +1,8 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import isEmpty from '../helpers/isEmpty';
 
 // Constants
 import {
-  LOGIN_USER_FAILURE,
   LOGIN_USER_PENDING,
   LOGIN_USER_SUCCESS,
   GET_ERRORS
