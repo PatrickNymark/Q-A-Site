@@ -5,7 +5,6 @@ const initialState = {
   isAuthenticated: false,
   loading: false,
   user: {},
-  errors: {}
 };
 
 export default function (state = initialState, action) {
