@@ -14,6 +14,19 @@ router.get('/', (req, res) => {
   User.find().then(users => res.json(users));
 });
 
+// @route   GET api/auth/
+// @desc    Get user by id
+// @access  Private
+router.get('/:id', (req, res) => {
+  User.findById(req.params.id).then(user => {
+    if (!user) {
+      return res.status(400).json({ notfound: 'User not found' });
+    }
+
+    res.json(user);
+  });
+});
+
 // @route   POST api/auth/register
 // @desc    Register new user route
 // @access  Public
