@@ -3,16 +3,21 @@ import jwt_decode from 'jwt-decode';
 import isEmpty from '../helpers/isEmpty';
 
 // Constants
-import { LOGIN_USER_FAILURE, LOGIN_USER_PENDING, LOGIN_USER_SUCCESS } from './types';
+import {
+  LOGIN_USER_FAILURE,
+  LOGIN_USER_PENDING,
+  LOGIN_USER_SUCCESS,
+  GET_ERRORS
+} from './types';
 import setAuthToken from '../helpers/setAuthToken';
 
 export const registerUser = (userData, history) => dispatch => {
   axios
     .post('/api/auth/register', userData)
     .then(res => history.push('/login'))
-    .catch(err =>
-      console.log(err)
-    );
+    .catch(err => {
+      dispatch({ type: GET_ERRORS, payload: err.response.data })
+    });
 };
 
 export const loginUser = userData => dispatch => {
@@ -30,7 +35,7 @@ export const loginUser = userData => dispatch => {
       dispatch({ type: LOGIN_USER_SUCCESS, payload: decoded });
     })
     .catch(err =>
-      dispatch({ type: LOGIN_USER_FAILURE, payload: err.response.data })
+      dispatch({ type: GET_ERRORS, payload: err.response.data })
     );
 };
 

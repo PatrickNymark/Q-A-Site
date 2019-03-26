@@ -1,4 +1,4 @@
-import { LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, LOGIN_USER_PENDING } from '../actions/types';
+import { LOGIN_USER_SUCCESS, LOGIN_USER_PENDING, GET_ERRORS } from '../actions/types';
 import isEmpty from '../helpers/isEmpty';
 
 const initialState = {
@@ -24,13 +24,11 @@ export default function (state = initialState, action) {
         user: action.payload
       };
 
-    case LOGIN_USER_FAILURE:
+    case GET_ERRORS:
       return {
         ...state,
         loading: false,
-        errors: action.payload
       }
-
     default:
       return state;
   }
