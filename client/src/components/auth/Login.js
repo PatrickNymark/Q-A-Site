@@ -5,6 +5,7 @@ import isEmpty from '../../helpers/isEmpty';
 
 // Actions
 import { loginUser } from '../../actions/authActions';
+import { clearErrors } from '../../actions/errorActions';
 
 // Semantic UI
 import {
@@ -24,7 +25,6 @@ class Login extends Component {
   state = {
     email: '',
     password: '',
-    errors: {}
   };
 
   onChange = e => {
@@ -48,17 +48,15 @@ class Login extends Component {
     if (nextProps.auth.isAuthenticated) {
       this.props.history.push('/dashboard');
     }
+  }
 
-    if (nextProps.errors) {
-      this.setState({
-        errors: nextProps.errors
-      });
-    }
+  componentWillUnmount() {
+    this.props.clearErrors();
   }
 
   render() {
-    const { errors } = this.state;
     const { loading } = this.props.auth;
+    const { errors } = this.props;
     return (
       <Container>
         {loading && <Loader active />
@@ -124,7 +122,6 @@ class Login extends Component {
                   color="red"
                   fluid
                   type="submit"
-                  error={this.props.auth.errors.email}
                 >
                   Login
                 </Button>
@@ -154,5 +151,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { loginUser }
+  { loginUser, clearErrors }
 )(Login);
