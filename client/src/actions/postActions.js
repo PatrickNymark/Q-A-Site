@@ -1,5 +1,4 @@
 import {
-  TEST_DISPATCH,
   ADD_POST,
   GET_POST_ERRORS,
   GET_POST_USER,
@@ -7,12 +6,6 @@ import {
 } from './types';
 import axios from 'axios';
 
-export const testDispatch = () => dispatch => {
-  dispatch({
-    type: TEST_DISPATCH,
-    payload: true
-  });
-};
 
 export const addQuestion = (postInfo, history) => dispatch => {
   axios
