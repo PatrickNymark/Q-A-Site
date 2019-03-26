@@ -6,7 +6,7 @@ const passport = require('passport');
 const profileController = require('../../controllers/profiles/profileController');
 
 // @route   GET api/profiles/
-// @desc    Get all profiles route
+// @desc    Get current profile
 // @access  Public
 router.get(
   '/',
