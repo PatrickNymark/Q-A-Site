@@ -10,17 +10,7 @@ const profileController = require('../../controllers/profiles/profileController'
 // @access  Public
 router.get(
   '/',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    console.log(req.user);
-    Profile.findOne({ user: req.user._id.toString() }).then(profile => {
-      console.log(profile);
-      if (!profile) {
-        return res.status(400).json({ notfound: 'Profile not found' });
-      }
-      res.json(profile);
-    });
-  }
+  passport.authenticate('jwt', { session: false }), profileController.getProfile
 );
 
 // @route   POST api/profiles/
