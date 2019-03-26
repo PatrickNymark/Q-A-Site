@@ -49,9 +49,9 @@ class Login extends Component {
       this.props.history.push('/dashboard');
     }
 
-    if (nextProps.auth.errors) {
+    if (nextProps.errors) {
       this.setState({
-        errors: nextProps.auth.errors
+        errors: nextProps.errors
       });
     }
   }
@@ -85,7 +85,7 @@ class Login extends Component {
                 </div>
                 {errors.email && (
                   <Label basic color="red" pointing="below">
-                    {this.props.auth.errors.email}
+                    {errors.email}
                   </Label>
                 )}
                 <Form.Input
@@ -115,7 +115,7 @@ class Login extends Component {
                     color="red"
                     pointing="above"
                   >
-                    {this.props.auth.errors.password}
+                    {errors.password}
                   </Label>
                 )}
                 <Divider />
@@ -148,7 +148,8 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  errors: state.errors
 });
 
 export default connect(
