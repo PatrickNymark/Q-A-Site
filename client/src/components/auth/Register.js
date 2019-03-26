@@ -62,25 +62,30 @@ class Register extends Component {
                   </Header>
                 </div>
 
-                <Form.Group>
+                <Form.Group widths="equal">
                   <Form.Input
-                    icon="user"
-                    iconPosition="left"
-                    name="email"
+                    onChange={this.onChange}
+                    type="text"
+                    placeholder="First Name"
+                  />
+                  <Form.Input
+                    onChange={this.onChange}
+                    type="text"
+                    placeholder="Last Name"
+                  />
+                </Form.Group>
+
+                <Form.Group widths="equal">
+                  <Form.Input
                     onChange={this.onChange}
                     type="text"
                     placeholder="Email"
                   />
-
                   <Form.Input
-                    icon="lock"
-                    iconPosition="left"
-                    name="password"
                     onChange={this.onChange}
                     type="password"
                     placeholder="Password"
                   />
-                  <Divider />
                 </Form.Group>
 
                 <Divider />
