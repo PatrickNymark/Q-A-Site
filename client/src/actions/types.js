@@ -20,3 +20,4 @@ export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 // Errors
 export const GET_POST_ERRORS = 'GET_POST_ERRORS';
 export const GET_AUTH_ERRORS = 'GET_AUTH_ERRORS';
+export const GET_ERRORS = 'GET_ERRORS';
