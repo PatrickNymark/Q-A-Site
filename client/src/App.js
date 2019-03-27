@@ -16,7 +16,7 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Reset from './components/auth/Reset';
 import PrivateRoute from './helpers/PrivateRoute';
-import Dashboard from './templates/Dashboard';
+import Dashboard from './components/dashboard/Dashboard';
 import setAuthToken from './helpers/setAuthToken';
 import Navbar from './components/Navbar';
 import Landing from './components/Landing';

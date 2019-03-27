@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Header, List, Divider, Label } from 'semantic-ui-react';
+import { Header, List, Divider } from 'semantic-ui-react';
 import Moment from 'react-moment';
 
 const date = Date.now();
