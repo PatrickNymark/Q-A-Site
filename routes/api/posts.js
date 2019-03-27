@@ -14,18 +14,12 @@ router.get('/', (req, res) => {
   });
 });
 
+// @route   GET api/posts/:user_id
+// @desc    Get posts by user route
+// @access  Private
 router.get(
   '/user',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    Post.find({ creator: req.user._id.toString() }).then(posts => {
-      if (!posts) {
-        return res.status(400).json({ msg: 'No posts' });
-      }
-
-      res.json(posts);
-    });
-  }
+  passport.authenticate('jwt', { session: false }), postController.getPostByUser
 );
 
 // @route   POST api/posts/

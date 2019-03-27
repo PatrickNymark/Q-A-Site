@@ -67,3 +67,18 @@ exports.deletePost = (req, res) => {
     })
     .catch(err => res.status(500).json(err.message));
 };
+
+/*
+
+  __GET POSTS BY USER
+  
+*/
+exports.getPostByUser = (req, res) => {
+  Post.find({ creator: req.user._id.toString() }).then(posts => {
+    if (!posts) {
+      return res.status(400).json({ msg: 'No posts' });
+    }
+
+    res.json(posts);
+  });
+}
