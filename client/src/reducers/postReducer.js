@@ -1,38 +1,42 @@
 import {
-  TEST_DISPATCH,
-  GET_POST,
-  GET_POST_ERRORS,
-  GET_POST_USER,
-  DELETE_POST
+  GET_POST_SUCCESS,
+  GET_POSTS_LOADING,
+  DELETE_POST,
+  GET_USER_POSTS_SUCCESS
 } from '../actions/types';
 
 const initialState = {
   post: {},
   posts: [],
-  errors: {}
+  loading: false
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case GET_POST:
+    case GET_POSTS_LOADING:
       return {
-        ...state
+        ...state,
+        loading: true
+      }
+    case GET_POST_SUCCESS:
+      return {
+        ...state,
+        post: action.payload,
+        loading: false
       };
     case DELETE_POST:
       return {
         ...state,
-        posts: state.posts.filter(post => post._id !== action.payload)
+        posts: state.posts.filter(post => post._id !== action.payload),
+        loading: false
       };
-    case GET_POST_USER:
+    case GET_USER_POSTS_SUCCESS:
       return {
         ...state,
-        posts: action.payload
+        posts: action.payload,
+        loading: false
       };
-    case GET_POST_ERRORS:
-      return {
-        ...state,
-        errors: action.payload
-      };
+
     default:
       return state;
   }

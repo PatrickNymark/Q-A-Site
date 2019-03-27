@@ -2,11 +2,12 @@
 // Posts
 export const ADD_POST = 'ADD_POST';
 export const DELETE_POST = 'DELETE_POST';
-export const GET_POST = 'GET_POST';
-export const GET_POST_USER = 'GET_POST_USER';
+export const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
+export const GET_USER_POSTS_SUCCESS = 'GET_USER_POSTS_SUCCESS';
+export const GET_POSTS_LOADING = 'GET_POST_LOADING';
 
 // Profile
-export const GET_PROFILE_SUCCESS = 'GET_PROFILE';
+export const GET_PROFILE_SUCCESS = 'GET_PROFILE_SUCCESS';
 export const GET_PROFILE_LOADING = 'GET_PROFILE_LOADING';
 
 // Auth
@@ -15,6 +16,5 @@ export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 
 // Errors
-export const GET_POST_ERRORS = 'GET_POST_ERRORS';
 export const GET_ERRORS = 'GET_ERRORS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
