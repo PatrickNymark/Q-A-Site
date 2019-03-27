@@ -6,7 +6,6 @@ import {
 
 const initialState = {
   profile: {},
-  errors: {},
   loading: false
 };
 
