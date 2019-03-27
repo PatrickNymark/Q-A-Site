@@ -9,12 +9,9 @@ import { clearErrors } from '../../actions/errorActions';
 // Semantic UI
 import {
   Container,
-  Image,
-  Grid,
   Menu,
   Label,
   Button,
-  Segment,
   Loader
 } from 'semantic-ui-react';
 
@@ -56,6 +53,7 @@ class Dashboard extends Component {
       return <Loader active />
     }
 
+    // Check if user has not created a profile yet
     if (errors.notfound) {
       return <Button>Add Profile</Button>;
     }
@@ -102,10 +100,8 @@ class Dashboard extends Component {
             </Menu.Menu>
           </Menu>
 
-          {this.state.activeItem === 'profile' ? <Profile /> : null}
-          {this.state.activeItem === 'myQuestions' ? (
-            <MyQuestions user={this.props.auth.user} />
-          ) : null}
+          {this.state.activeItem === 'profile' && <Profile profile={profile} />}
+          {this.state.activeItem === 'myQuestions' && <MyQuestions user={this.props.auth.user} />}
         </Container>
       </div>
     );
