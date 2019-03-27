@@ -18,18 +18,22 @@ exports.likes = require('./likes');
 
 */
 exports.addNewPost = (req, res) => {
-  const { title, text } = req.body;
+  const { title, text, category, tags } = req.body;
   const { isValid, errors } = postValidator(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
+  const tagsArray = tags.split(', ');
+
   // Create new post
   const newPost = new Post({
     creator: req.user,
     title,
-    text
+    text,
+    category,
+    tags: tagsArray
   });
 
   // Save post
