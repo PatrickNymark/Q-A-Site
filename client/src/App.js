@@ -20,7 +20,7 @@ import Dashboard from './components/dashboard/Dashboard';
 import setAuthToken from './helpers/setAuthToken';
 import Navbar from './components/Navbar';
 import Landing from './components/Landing';
-import Questions from './components/Questions';
+import Questions from './components/questions/Questions';
 
 // Check localStorage for token
 if (localStorage.jwtToken) {
