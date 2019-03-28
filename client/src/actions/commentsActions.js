@@ -31,3 +31,10 @@ export const getComments = (postID) => dispatch => {
     })
   })
 }
+
+export const clearComments = () => dispatch => {
+  dispatch({
+    type: GET_COMMENTS_SUCCESS,
+    payload: {}
+  })
+}
