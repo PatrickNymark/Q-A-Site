@@ -2,7 +2,9 @@ import {
   GET_POST_SUCCESS,
   GET_POSTS_LOADING,
   DELETE_POST,
-  GET_USER_POSTS_SUCCESS
+  GET_USER_POSTS_SUCCESS,
+  GET_POSTS_SUCCESS,
+  GET_ERRORS
 } from '../actions/types';
 
 const initialState = {
@@ -24,6 +26,12 @@ export default function (state = initialState, action) {
         post: action.payload,
         loading: false
       };
+    case GET_POSTS_SUCCESS:
+      return {
+        ...state,
+        posts: action.payload,
+        loading: false
+      }
     case DELETE_POST:
       return {
         ...state,
@@ -36,7 +44,11 @@ export default function (state = initialState, action) {
         posts: action.payload,
         loading: false
       };
-
+    case GET_ERRORS:
+      return {
+        ...state,
+        loading: false
+      }
     default:
       return state;
   }
