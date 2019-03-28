@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
   });
 });
 
-// @route   GET api/posts/:user_id
+// @route   GET api/posts/user
 // @desc    Get posts by user route
 // @access  Private
 router.get(

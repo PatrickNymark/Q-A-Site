@@ -124,3 +124,18 @@ exports.loginUser = (req, res) => {
     })
     .catch(err => res.status(500).json(err));
 };
+
+/*
+
+  __GET CURRENT USER
+
+*/
+exports.getCurrentUser = (req, res) => {
+  User.findOne({ id: req.user.id }).then(user => {
+    if (!user) {
+      return res.status(400).json({ notfound: 'User not found' })
+    }
+
+    res.json(user)
+  })
+}
