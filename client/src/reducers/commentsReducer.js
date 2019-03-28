@@ -15,7 +15,8 @@ export default function (state = initialState, action) {
     case GET_COMMENTS_SUCCESS:
       return {
         ...state,
-        comments: action.payload
+        comments: action.payload,
+        loading: false
       }
     case ADD_COMMENT:
       return {
