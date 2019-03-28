@@ -7,18 +7,17 @@ const Question = (props) => {
   return (
     <Item>
       <Item.Content>
-        <Item.Header as='a'>My Neighbor Totoro</Item.Header>
+        <Item.Header as='a'>{post.title}</Item.Header>
         <Item.Meta>
           <span className='cinema'>IFC Cinema</span>
         </Item.Meta>
-        <Item.Description>{post.title}</Item.Description>
+        <Item.Description>{post.text}</Item.Description>
         <Item.Extra>
-          <Button color="red" floated='right'>
+          <Label as="a" color="red">
             Go to question
-             <Icon name='right chevron' />
-          </Button>
-          <Label>102 Likes</Label>
-          <Label>26 Comments</Label>
+          </Label>
+          <Label as="a"><Icon name="like" />{post.likes.length}</Label>
+          <Label as="a"><Icon name="comment" />{post.comments.length}</Label>
         </Item.Extra>
       </Item.Content>
     </Item>
