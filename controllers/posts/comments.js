@@ -27,7 +27,8 @@ exports.addComment = (req, res) => {
       // Create new post payload
       const newComment = {
         text: req.body.text,
-        creator: req.user
+        user: req.user,
+        userName: req.user.firstName + " " + req.user.lastName
       };
 
       // Add to beginning of comments array
@@ -36,7 +37,7 @@ exports.addComment = (req, res) => {
       // Save updated post
       post
         .save()
-        .then(post => res.json(post))
+        .then(post => res.json(newComment))
         .catch(err => res.status(500).json(err.message));
     })
     .catch(err => res.status(500).json(err.message));
@@ -78,3 +79,20 @@ exports.deleteComment = (req, res) => {
     })
     .catch(err => res.status(400).json(err));
 };
+
+/*
+
+  __GET COMMENTS BY POST ID
+
+*/
+exports.getCommentsByPostID = (req, res) => {
+  const { post_id } = req.params;
+
+  Post.findById(post_id).then(post => {
+    if (!post) {
+      return res.status(400).json({ notfound: 'Post not found' });
+    }
+
+    res.json(post.comments)
+  })
+}

@@ -58,6 +58,11 @@ router.delete(
   postController.comments.deleteComment
 );
 
+// @route   GET api/posts/comment/:post_id
+// @desc    Get comments by post
+// @access  Private
+router.get('/comment/:post_id', postController.comments.getCommentsByPostID)
+
 // @route   POST api/posts/like/:post_id
 // @desc    Like or unlike post route
 // @access  Private
