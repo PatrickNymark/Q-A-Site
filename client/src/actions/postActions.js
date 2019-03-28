@@ -63,15 +63,3 @@ export const deletePost = postID => dispatch => {
       })
     );
 };
-
-export const addComment = (comment, postID, history) => dispatch => {
-  axios
-    .post(`/api/posts/comment/${postID}`, comment)
-    .then(res => console.log(res))
-    .catch(err =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
-      })
-    )
-}
