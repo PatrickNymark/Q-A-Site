@@ -3,7 +3,8 @@ import {
   DELETE_POST,
   GET_ERRORS,
   GET_USER_POSTS_SUCCESS,
-  GET_POSTS_LOADING
+  GET_POSTS_LOADING,
+  GET_POSTS_SUCCESS
 } from './types';
 import axios from 'axios';
 
@@ -32,6 +33,17 @@ export const getPostsByUser = user => dispatch => {
     .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
 };
 
+export const getAllPosts = () => dispatch => {
+  dispatch({
+    type: GET_POSTS_LOADING
+  })
+
+  axios
+    .get('/api/posts')
+    .then(res => dispatch({ type: GET_POSTS_SUCCESS, payload: res.data }))
+    .catch(err => dispatch({ GET_ERRORS, payload: err.response.data }))
+}
+
 export const deletePost = postID => dispatch => {
   dispatch({
     type: GET_POSTS_LOADING
@@ -51,3 +63,15 @@ export const deletePost = postID => dispatch => {
       })
     );
 };
+
+export const addComment = (comment, postID, history) => dispatch => {
+  axios
+    .post(`/api/posts/comment/${postID}`, comment)
+    .then(res => console.log(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    )
+}
