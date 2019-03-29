@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addComment, getComments, clearComments } from '../../actions/commentsActions'
+import { addComment, getComments, clearComments, removeComment } from '../../actions/commentsActions'
 import Moment from 'react-moment';
 
 import { Card, Icon, Label, Feed, Container, Input, TextArea, Form, Divider, Loader } from 'semantic-ui-react';
@@ -16,6 +16,10 @@ class Question extends Component {
       showComments: !this.state.showComments
     })
 
+  }
+
+  onDeleteClick = (e, { id }) => {
+    this.props.removeComment(id, this.props.post._id)
   }
 
   onChange = e => {
@@ -72,7 +76,7 @@ class Question extends Component {
               return <Feed.Event style={{ padding: '20px 20px' }}>
                 <Feed.Content>
                   <Feed.Summary>
-                    <Feed.User style={{ marginRight: '5px', }}>{comment.userName}</Feed.User>
+                    <Feed.User style={{ marginRight: '5px' }}>{comment.userName}</Feed.User>
                     {comment.text} <br />
                   </Feed.Summary>
 
@@ -86,7 +90,7 @@ class Question extends Component {
                   <Divider />
 
                 </Feed.Content>
-                {comment.user === this.props.auth.user.id && <Icon name="remove circle" color="blue" corner="left" />}
+                {comment.user === this.props.auth.user.id && <Icon id={comment._id} onClick={this.onDeleteClick} name="remove circle" color="blue" corner="left" />}
 
               </Feed.Event>
             })}
@@ -103,5 +107,5 @@ const mapStateToProps = state => ({
   comments: state.comments
 })
 
-export default connect(mapStateToProps, { addComment, getComments, clearComments })(Question);
+export default connect(mapStateToProps, { addComment, getComments, clearComments, removeComment })(Question);
 
