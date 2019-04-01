@@ -37,7 +37,7 @@ exports.addComment = (req, res) => {
       // Save updated post
       post
         .save()
-        .then(post => res.json(newComment))
+        .then(post => res.json(post))
         .catch(err => res.status(500).json(err.message));
     })
     .catch(err => res.status(500).json(err.message));
