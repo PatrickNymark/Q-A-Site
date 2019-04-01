@@ -86,3 +86,29 @@ exports.getPostByUser = (req, res) => {
     res.json(posts);
   });
 }
+
+/*
+
+  __GET ALL POSTS
+
+*/
+exports.getAllPosts = (req, res) => {
+  Post.find({}).then(posts => {
+    res.json(posts);
+  }).catch(err => res.status(400).json(err.message));
+}
+
+/*
+
+  __GET POST BY ID
+
+*/
+exports.getPostById = (req, res) => {
+  Post.findById(req.params.post_id).then(post => {
+    if (!post) {
+      return res.status(404).json({ notfound: 'Post not found' })
+    }
+
+    res.json(post)
+  })
+}

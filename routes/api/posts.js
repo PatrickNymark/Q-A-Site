@@ -8,11 +8,12 @@ const postController = require('../../controllers/posts/postController');
 // @route   GET api/posts/
 // @desc    Get all posts route
 // @access  Public
-router.get('/', (req, res) => {
-  Post.find().then(posts => {
-    res.json(posts);
-  });
-});
+router.get('/', postController.getAllPosts);
+
+// @route   GET api/posts/:post_id
+// @desc    Get single post route
+// @access  Public
+router.get('/:post_id', postController.getPostById)
 
 // @route   GET api/posts/user
 // @desc    Get posts by user route

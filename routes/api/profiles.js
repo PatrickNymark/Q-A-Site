@@ -7,7 +7,7 @@ const profileController = require('../../controllers/profiles/profileController'
 
 // @route   GET api/profiles/
 // @desc    Get current profile
-// @access  Public
+// @access  Private
 router.get(
   '/',
   passport.authenticate('jwt', { session: false }), profileController.getProfile
