@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 import { Item, Button, Label, Icon } from 'semantic-ui-react';
 
@@ -13,7 +14,7 @@ const Question = (props) => {
         </Item.Meta>
         <Item.Description>{post.text}</Item.Description>
         <Item.Extra>
-          <Label as="a" color="red">
+          <Label as={Link} to={`/questions/${post._id}`} color="red">
             Go to question
           </Label>
           <Label as="a"><Icon name="like" />{post.likes.length}</Label>
