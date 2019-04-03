@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addQuestion } from '../../actions/postActions';
+import { addPost } from '../../actions/postActions';
 
 import { Modal, Form, Input, TextArea, Button } from 'semantic-ui-react';
 
@@ -26,7 +26,7 @@ class AddModal extends Component {
       text: this.state.text
     };
 
-    this.props.addQuestion(payload, this.props.history);
+    this.props.addPost(payload, this.props.history);
     this.handleModal();
   };
 
@@ -66,8 +66,10 @@ class AddModal extends Component {
                   name="text"
                   rows={10}
                   placeholder="Describe your question more in depth, or provide links etc."
-                  style={{ width: '100%', marginTop: '20px' }}
+                  style={{ margin: '20px 0px' }}
                 />
+                <Input fluid onChange={this.onChange} name="category" placeholder="Enter category" />
+                <Input style={{  margin: '20px 0px' }} fluid onChange={this.onChange} name="tags" placeholder="Enter tags to describe question, seperate with comma" />
 
                 <Button
                   type="submit"
@@ -93,5 +95,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { addQuestion }
+  { addPost }
 )(AddModal);
