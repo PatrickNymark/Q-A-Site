@@ -78,7 +78,7 @@ exports.deletePost = (req, res) => {
   
 */
 exports.getPostByUser = (req, res) => {
-  Post.find({ creator: req.user._id.toString() }).then(posts => {
+  Post.find({ creator: req.params.user_id }).then(posts => {
     if (!posts) {
       return res.status(400).json({ msg: 'No posts' });
     }

@@ -19,7 +19,7 @@ router.get('/:post_id', postController.getPostById)
 // @desc    Get posts by user route
 // @access  Private
 router.get(
-  '/user',
+  '/user/:user_id',
   passport.authenticate('jwt', { session: false }), postController.getPostByUser
 );
 
