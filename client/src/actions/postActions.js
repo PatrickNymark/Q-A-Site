@@ -4,7 +4,8 @@ import {
   GET_ERRORS,
   GET_USER_POSTS_SUCCESS,
   GET_POSTS_LOADING,
-  GET_POSTS_SUCCESS
+  GET_POSTS_SUCCESS,
+  GET_POST_SUCCESS
 } from './types';
 import axios from 'axios';
 
@@ -23,12 +24,12 @@ export const addPost = (postInfo, history) => dispatch => {
     );
 };
 
-export const getPostsByUser = user => dispatch => {
+export const getPostsByUser = userID => dispatch => {
   dispatch({
     type: GET_POSTS_LOADING
   })
   axios
-    .get('/api/posts/user', user)
+    .get(`/api/posts/user/${userID}`)
     .then(res => dispatch({ type: GET_USER_POSTS_SUCCESS, payload: res.data }))
     .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
 };
@@ -39,7 +40,7 @@ export const getAllPosts = () => dispatch => {
   })
 
   axios
-    .get('/api/posts')
+    .get('/api/posts/')
     .then(res => dispatch({ type: GET_POSTS_SUCCESS, payload: res.data }))
     .catch(err => dispatch({ GET_ERRORS, payload: err.response.data }))
 }
@@ -63,3 +64,21 @@ export const deletePost = postID => dispatch => {
       })
     );
 };
+
+export const getSinglePost = postID => dispatch => {
+  dispatch({
+    type: GET_POSTS_LOADING
+  })
+
+  axios.get(`/api/posts/${postID}`).then(res => {
+    dispatch({
+      type: GET_POST_SUCCESS,
+      payload: res.data
+    })
+  }).catch(err => {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
+  })
+}
