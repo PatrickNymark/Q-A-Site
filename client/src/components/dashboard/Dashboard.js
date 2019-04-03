@@ -20,9 +20,14 @@ import Profile from './profile/Profile';
 import MyQuestions from './my-questions/MyQuestions';
 
 class Dashboard extends Component {
-  state = {
-    activeItem: 'profile'
-  };
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      activeItem: 'profile'
+    }
+  }
+
 
   handleItemClick = (e, { name }) => {
     this.setState({
