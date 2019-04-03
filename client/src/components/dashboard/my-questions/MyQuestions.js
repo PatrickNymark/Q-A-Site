@@ -16,7 +16,7 @@ import Question from './Question';
 
 class MyQuestions extends Component {
   componentDidMount() {
-    this.props.getPostsByUser(this.props.auth.user);
+    this.props.getPostsByUser(this.props.auth.user.id);
   }
 
   render() {
@@ -53,7 +53,7 @@ class MyQuestions extends Component {
                 <Item.Group divided>
                   {post.posts.map(post => {
                     return (
-                      <Question post={post} />
+                      <Question key={post._id} post={post} />
                     )
                   })}
                 </Item.Group>
