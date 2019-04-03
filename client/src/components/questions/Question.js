@@ -1,31 +1,62 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addComment, getComments, clearComments, removeComment } from '../../actions/commentsActions'
 import Moment from 'react-moment';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-import { Card, Icon, Label, Feed, Container, Input, TextArea, Form, Divider, Loader } from 'semantic-ui-react';
+import { Card, Icon, Label, Feed, Container, Input, TextArea, Form, Divider, Loader, Header } from 'semantic-ui-react';
+import Comments from './comments/Comments';
 
 class Question extends Component {
-  state = {
-    showComments: false,
-    comment: '',
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      comment: '',
+      comments: [],
+      isLiked: false,
+      showComments: false
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      comments: this.props.post.comments
+    });
+
+    const likeIndex = this.props.post.likes
+      .map(like => like._id)
+      .indexOf(this.props.auth.user.id);
+
+    if (likeIndex > -1) {
+      this.setState({
+        isLiked: true
+      })
+    }
   }
 
   handleComments = e => {
     this.setState({
       showComments: !this.state.showComments
     })
-
   }
 
-  onDeleteClick = (e, { id }) => {
-    this.props.removeComment(id, this.props.post._id)
+  handleCommentClick = e => {
+    document.getElementById('inputField').focus();
   }
 
   onChange = e => {
     this.setState({
       [e.target.name]: e.target.value
     })
+  }
+
+  handleLike = e => {
+    axios.post(`/api/posts/like/${this.props.post._id}`).then(res => {
+      this.setState({
+        isLiked: !this.state.isLiked
+      })
+    }).catch(err => console.log(err))
   }
 
   onSubmit = e => {
@@ -36,76 +67,50 @@ class Question extends Component {
       userName: this.props.auth.user.name
     }
 
-    this.props.addComment(comment, this.props.post._id);
-    this.setState({
-      comment: ''
-    })
+    axios.post(`/api/posts/comment/${this.props.post._id}`, comment).then(res => {
+      this.setState({
+        comments: res.data.comments,
+        comment: '',
+        showComments: true
+      })
+    }).catch(err => this.setState({ error: err.response.data }))
   }
-
-  componentDidMount() {
-    this.props.getComments(this.props.post._id);
-  }
-
 
   render() {
     const { post } = this.props;
     const { showComments } = this.state;
+    const { comments } = this.state;
     return (
       <Card style={{ width: '90%' }}>
-        <Card.Content style={{ margin: '20px 0px' }} header={post.title} />
+        <Card.Content style={{ margin: '20px 0px' }}>
+          <Header as={Link} to={`/question/${post._id}`} >{post.title}</Header>
+        </Card.Content>
         <Card.Content description={post.text} />
+        <Card.Content style={{ fontSize: '12px', padding: '0px 40px' }} extra>
+          <Feed.Like style={{ float: 'left' }}><Icon size="small" name='like' color="red" />{post.likes.length} Likes</Feed.Like>
+          <Feed.Like style={{ float: 'right' }} onClick={this.handleComments}><Icon size="small" name='comment' color="blue" />{comments.length} Comments</Feed.Like>
+        </Card.Content>
         <Card.Content extra>
-          <Feed.Like style={{ marginRight: '20px' }}> <Icon name='like' />{post.likes.length} Likes</Feed.Like>
-          <Feed.Like onClick={this.handleComments}><Icon name="comment" />{post.comments.length} Comments</Feed.Like>
+          <Feed.Like color="red" onClick={this.handleLike} style={{ marginRight: '30px' }}> <Icon name='like' color={this.state.isLiked ? 'red' : null} />Like</Feed.Like>
+          <Feed.Like style={{ marginLeft: '30px' }} onClick={this.handleCommentClick}><Icon name="comment" />Comment</Feed.Like>
 
         </Card.Content>
         <Card.Content extra>
           <Form onSubmit={this.onSubmit}>
-            {this.props.errors.text && <Label basic color="red" pointing="below">{this.props.errors.text}</Label>}
-
-            <Input name="comment" onChange={this.onChange} value={this.state.comment} fluid placeholder="Your comment ..." />
-
-
+            {this.state.error && <Label basic color="red" pointing="below">{this.state.error.text || this.state.error}</Label>}
+            <Input id="inputField" name="comment" onChange={this.onChange} value={this.state.comment} fluid placeholder="Your comment ..." />
           </Form>
+
         </Card.Content>
-        {showComments &&
-          <Feed>
-
-            <Loader inline="centered" active={this.props.comments.loading} />
-            {this.props.comments.comments.map(comment => {
-              return <Feed.Event style={{ padding: '20px 20px' }}>
-                <Feed.Content>
-                  <Feed.Summary>
-                    <Feed.User style={{ marginRight: '5px' }}>{comment.userName}</Feed.User>
-                    {comment.text} <br />
-                  </Feed.Summary>
-
-                  <Feed.Meta>
-                    <Feed.Like style={{ fontSize: '15px' }}>
-                      <Moment format="DD/MM/YYYY hh:mm">
-                        {comment.date}
-                      </Moment>
-                    </Feed.Like>
-                  </Feed.Meta>
-                  <Divider />
-
-                </Feed.Content>
-                {comment.user === this.props.auth.user.id && <Icon id={comment._id} onClick={this.onDeleteClick} name="remove circle" color="blue" corner="left" />}
-
-              </Feed.Event>
-            })}
-            <Divider />
-          </Feed>}
+        {showComments && <Comments comments={comments} />}
       </Card>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  errors: state.errors,
   auth: state.auth,
-  comments: state.comments
 })
 
-export default connect(mapStateToProps, { addComment, getComments, clearComments, removeComment })(Question);
+export default connect(mapStateToProps)(Question);
 
