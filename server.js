@@ -42,8 +42,6 @@ app.use('/api/posts', posts);
 app.use('/api/profiles', profiles);
 app.use('/api/auth', users);
 
-const port = 5000 || process.env.PORT;
-
 // Server static assets if in production
 if (process.env.NODE_ENV === 'production') {
   // Set static folder
@@ -53,5 +51,7 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });
 }
+
+const port = 5000 || process.env.PORT;
 
 app.listen(port, () => console.log(`Server running on ${port}`));
