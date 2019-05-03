@@ -1,4 +1,4 @@
-const express = require('express');
+_const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const logger = require('morgan');
@@ -31,16 +31,6 @@ mongoose
 // Body-parser middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// Morgan middleware
-app.use(logger('dev'));
-app.use(
-  logger('common', {
-    stream: fs.createWriteStream(__dirname + '/logs/' + 'access.log', {
-      flags: 'a'
-    })
-  })
-);
 
 // Router middleware
 app.use('/api/posts', posts);
