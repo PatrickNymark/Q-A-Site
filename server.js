@@ -12,6 +12,11 @@ const posts = require('./routes/api/posts');
 const profiles = require('./routes/api/profiles');
 const users = require('./routes/auth/users');
 
+// Test Route
+app.get('/', (req, res) => {
+  res.send('Hello World')
+})
+
 // Passport Config
 app.use(passport.initialize());
 require('./config/passport')(passport);
