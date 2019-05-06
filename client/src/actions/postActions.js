@@ -40,8 +40,10 @@ export const getAllPosts = () => dispatch => {
   })
 
   axios
-    .get('/api/posts/')
-    .then(res => dispatch({ type: GET_POSTS_SUCCESS, payload: res.data }))
+    .get('http://localhost:5000/api/posts/')
+    .then(res => {
+      dispatch({ type: GET_POSTS_SUCCESS, payload: res.data })
+    })
     .catch(err => dispatch({ GET_ERRORS, payload: err.response.data }))
 }
 
