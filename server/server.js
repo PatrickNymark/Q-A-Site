@@ -21,7 +21,7 @@ require('./config/passport')(passport);
 
 // Database config
 mongoose
-  .connect(process.env.mongoURI, { useNewUrlParser: true })
+  .connect(process.env.MONGODB_URI, { useNewUrlParser: true })
   .then(res => console.log('Database connected'))
   .catch(err => console.log(err));
 
