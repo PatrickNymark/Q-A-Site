@@ -40,11 +40,11 @@ export const getAllPosts = () => dispatch => {
   })
 
   axios
-    .get('http://localhost:5000/api/posts/')
+    .get('/api/posts/')
     .then(res => {
       dispatch({ type: GET_POSTS_SUCCESS, payload: res.data })
     })
-    .catch(err => dispatch({ GET_ERRORS, payload: err.response.data }))
+    .catch(err => dispatch({ type: GET_ERRORS, payload: err.response }))
 }
 
 export const deletePost = postID => dispatch => {

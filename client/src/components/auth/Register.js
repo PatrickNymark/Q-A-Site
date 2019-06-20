@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/authActions';
+import { clearErrors } from '../../actions/errorActions';
+
 
 // Semantic UI
 import {
@@ -18,6 +20,10 @@ import {
 
 class Register extends Component {
   state = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
     errors: {}
   };
 
@@ -37,8 +43,15 @@ class Register extends Component {
       password: this.state.password
     };
 
+    console.log(payload)
+
     this.props.registerUser(payload, this.props.history);
   };
+
+  componentWillUnmount() {
+    this.props.clearErrors();
+  }
+
   render() {
     return (
       <Container>
@@ -65,12 +78,14 @@ class Register extends Component {
                 <Form.Group widths="equal">
                   <Form.Input
                     onChange={this.onChange}
+                    name="firstName"
                     type="text"
                     placeholder="First Name"
                   />
                   <Form.Input
                     onChange={this.onChange}
                     type="text"
+                    name="lastName"
                     placeholder="Last Name"
                   />
                 </Form.Group>
@@ -79,11 +94,13 @@ class Register extends Component {
                   <Form.Input
                     onChange={this.onChange}
                     type="text"
+                    name="email"
                     placeholder="Email"
                   />
                   <Form.Input
                     onChange={this.onChange}
                     type="password"
+                    name="password"
                     placeholder="Password"
                   />
                 </Form.Group>
@@ -118,5 +135,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { registerUser }
+  { registerUser, clearErrors }
 )(Register);

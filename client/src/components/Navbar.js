@@ -55,7 +55,6 @@ class Navbar extends Component {
           >
             <Popup
               on="click"
-              header="Test Header"
               content={<Button onClick={this.props.logoutUser}>Logout</Button>}
               trigger={
                 <Icon

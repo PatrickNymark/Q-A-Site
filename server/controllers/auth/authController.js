@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const keys = require('../../config/keys');
 
 // Mail
 const transporter = require('../../middleware/mailer');
@@ -49,11 +48,13 @@ exports.registerUser = (req, res) => {
         password
       });
 
+      console.log(newUser)
+
       // Save new user
       newUser
         .save()
         .then(user => {
-          const mailOptions = {
+         /* const mailOptions = {
             to: user.email,
             from: 'quora-help@replica.com',
             subject: 'New Quora Replica Account',
@@ -68,10 +69,11 @@ exports.registerUser = (req, res) => {
           transporter.sendMail(mailOptions, err => {
             if (err) {
               return res.status(500).json({ msg: err.message });
-            }
+            } 
 
-            res.json(user);
-          });
+          }); */
+          res.json(user);
+
         })
         .catch(err => res.status(500).json(err.message));
     })
@@ -114,7 +116,7 @@ exports.loginUser = (req, res) => {
         // Sign jwt token
         jwt.sign(
           payload,
-          keys.secretOrKey,
+          process.env.secretOrKey,
           { expiresIn: 36000 },
           (err, token) => {
             res.json({ success: true, token: 'bearer ' + token });

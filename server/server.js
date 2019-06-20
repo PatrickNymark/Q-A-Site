@@ -12,19 +12,16 @@ const posts = require('./routes/api/posts');
 const profiles = require('./routes/api/profiles');
 const users = require('./routes/auth/users');
 
-// Test Route
-app.get('/', (req, res) => {
-  res.send('Hello World')
-})
+// .env config
+require('dotenv').config()
 
 // Passport Config
 app.use(passport.initialize());
 require('./config/passport')(passport);
 
 // Database config
-const db = require('./config/keys').mongoURI;
 mongoose
-  .connect(db, { useNewUrlParser: true })
+  .connect(process.env.mongoURI, { useNewUrlParser: true })
   .then(res => console.log('Database connected'))
   .catch(err => console.log(err));
 
